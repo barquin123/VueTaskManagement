@@ -1,31 +1,56 @@
 <script setup>
+import { ref } from 'vue';
 
+const todayDate = ref(new Date().toISOString().split('T')[0]); // yyyy-mm-dd format
+const taskName = ref('');
+const taskDescription = ref('');
+const taskDueDate = ref('');
+const taskPriority = ref('');
+const taskStatus = ref('Pending');
+
+    // Handle form submission
+const submitForm = () => {
+    const taskData = {
+        taskName: taskName.value,
+        taskDescription: taskDescription.value,
+        taskDueDate: taskDueDate.value,
+        taskPriority: taskPriority.value,
+        taskStatus: taskStatus.value,
+    };
+    console.log(taskData);
+};
 </script>
 
 <template>
-    <div class="addtask">
+    <div class="addtask" @submit.prevent="submitForm">
         <form action="addTask">
             <label for="taskName">Task Name:</label>
-            <input type="text" id="taskName" name="taskName">
+            <input type="text" id="taskName" v-model="taskName">
             <div class="clearfix"></div>
             <label for="taskDescription">Task Description:</label>
-            <textarea type="text" id="taskDescription" name="taskDescription"></textarea>
+            <textarea type="text" id="taskDescription" v-model="taskDescription"></textarea>
             <div class="clearfix"></div>
             <label for="taskDueDate">Task Due Date:</label>
-            <input type="date" id="taskDueDate" name="taskDueDate">
+            <input type="date" id="taskDueDate" v-model="taskDueDate" name="taskDueDate" :min="todayDate">
             <div class="clearfix"></div>
             <label>Task Priority</label>
-            <div>
-                <label for="Low">Task Priority</label>
-                <input type="radio" id="taskPriority" name="Low" value="Low">
-                <label for="Medium">Task Priority</label>
-                <input type="radio" id="taskPriority" name="Low" value="Medium">
-                <label for="High">Task Priority</label>
-                <input type="radio" id="taskPriority" name="High" value="High">
+            <div class="taskPriorityContainer">
+                <div>
+                    <input type="radio" id="Low" v-model="taskPriority" value="Low">
+                    <label for="Low">Low</label>
+                </div>
+                <div>
+                    <input type="radio" id="Medium" v-model="taskPriority" value="Medium">
+                    <label for="Medium">Medium</label>
+                </div>
+                <div>
+                    <input type="radio" id="High" v-model="taskPriority" value="High">
+                    <label for="High">High</label>
+                </div>
             </div>
             <div class="clearfix"></div>
             <label for="taskStatus">Task Status:</label>
-            <select  id="taskStatus" name="taskStatus">
+            <select  id="taskStatus" v-model="taskStatus">
                 <option value="Pending">Pending</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
@@ -46,6 +71,19 @@
         color: #fff;
         border: 1px solid #555;
         outline: none;
+    }
+    .taskPriorityContainer{
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        height: auto;
+    }
+    .taskPriorityContainer label{
+        margin-left: 10px;
+    }
+    input[type="radio"]{
+        width: auto;
+        display: unset;
     }
     input[type="date"]{
         color-scheme: dark;

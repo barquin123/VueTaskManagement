@@ -37,5 +37,36 @@ export const useTaskStore = defineStore("task", () => {
         }
   };
 
-  return { tasks, Taskloading, error, fetchTasks, addTask };
+  const updateTask = async (id, updateTask) =>{
+    Taskloading.value = true;
+    error.value = null;
+    try{
+        const response = await axios.put(`http://localhost:5000/api/tasks/${id}`, updateTask)
+        const index = tasks.value.findIndex(task => task.id === id);
+        if (index !== -1){
+            this.tasks[index] = response.data;
+        }
+    }catch(err){
+        error.value = 'error updating task';
+        console.log(err);
+    } finally{
+        Taskloading.value = false;
+    }   
+  }
+
+  const deleteTask = async (id) =>{
+    Taskloading.value = true;
+    error.value = null;
+    try{
+        await axios.delete(`http://localhost:5000/api/tasks/${id}`)
+        tasks.value = tasks.value.filter(task => task.id !== id);
+    }catch(err){
+        error.value = 'error deleting task';
+        console.log(err);
+    } finally{
+        Taskloading.value = false;
+    }
+  }
+
+  return { tasks, Taskloading, error, fetchTasks, addTask, updateTask, deleteTask };
 });
