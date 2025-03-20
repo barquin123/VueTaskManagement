@@ -63,7 +63,7 @@ const submitForm = () => {
             <div class="clearfix"></div>
             <label for="assignedTo">Assigned To:</label>
             <select id="assignedTo" v-model="taskAssignedTo">
-                <option v-for="(member, index) in members" :key="index" :value="member.name">{{ member.name }}</option>
+                <option v-for="(member, index) in members" :key="index" :value="member._id">{{ member.name }}</option>
             </select>
             <label for="taskStatus">Task Status:</label>
             <select  id="taskStatus" v-model="taskStatus">
