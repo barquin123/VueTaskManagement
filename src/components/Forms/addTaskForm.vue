@@ -1,5 +1,15 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+import { storeToRefs } from 'pinia';
+
+const userStore = useUserStore();
+const members = ref([]);
+
+onMounted(async () => {
+  await userStore.fetchMembers();
+  members.value = userStore.users;
+});
 
 const todayDate = ref(new Date().toISOString().split('T')[0]); // yyyy-mm-dd format
 const taskName = ref('');
@@ -49,6 +59,10 @@ const submitForm = () => {
                 </div>
             </div>
             <div class="clearfix"></div>
+            <label for="assignedTo">Assigned To:</label>
+            <select id="assignedTo" v-model="taskAssignedTo">
+                <option v-for="(member, index) in members" :key="index" :value="member.name">{{ member.name }}</option>
+            </select>
             <label for="taskStatus">Task Status:</label>
             <select  id="taskStatus" v-model="taskStatus">
                 <option value="Pending">Pending</option>
