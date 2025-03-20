@@ -49,4 +49,16 @@ defineProps({
         text-decoration: none;
         color: #fff;
     }
+
+    select{
+        background:none ;
+        color: #fff;
+        border: none;
+        width: 100%;
+        outline: none;
+    }
+    select option{
+        background: #000;
+        color: #fff;
+    }
 </style>

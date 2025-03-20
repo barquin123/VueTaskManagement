@@ -18,6 +18,7 @@
 
 <style scoped>
 h1{
+    font-weight: 700;
     text-align: center;
 }
     .loginForm{

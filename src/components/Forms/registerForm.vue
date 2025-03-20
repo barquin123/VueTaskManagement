@@ -20,6 +20,10 @@
 </template>
 
 <style scoped>
+h1{
+    font-weight: 700;
+    text-align: center;
+}
 .registerForm{
     width: 100%;
 }

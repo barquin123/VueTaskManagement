@@ -1,6 +1,10 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import navigationElem from '@/components/header/nav.vue'
+const userData = {
+  name: 'John Doe',
+  userStatus: 'member'
+}
 </script>
 
 <template>
@@ -14,6 +18,9 @@ import navigationElem from '@/components/header/nav.vue'
 </template>
 
 <style scoped>
+  main{
+    padding: 20px;
+  }
   header{
     background: #3e69bc;
   }

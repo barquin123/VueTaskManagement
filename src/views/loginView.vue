@@ -29,7 +29,7 @@
         <div class="inner" :class="activeFormClass">
             <loginForm :active="activeForm === 'LogInForm'" />
             <span class="NoteforLogIn">Welcom Back!<span class="registerBtn" @click="changeForm('registerForm')">No Account Register Here</span></span>
-            <span class="NoteforRegistrations">You Can Register Heres <q class="signInBtn" @click="changeForm('LogInForm')">Sign In Here</q></span>
+            <span class="NoteforRegistrations">You Can Register Here! <span class="signInBtn" @click="changeForm('LogInForm')">Sign In Here</span></span>
             <registerForm :active="activeForm === 'registerForm'"/>
         </div>
     </div>
@@ -40,6 +40,7 @@
         opacity: 0;
         position: absolute;
         transition: all 0.5s ease;
+        width:50%;
     }
     .NoteforLogIn{
         opacity: 1;
@@ -52,6 +53,20 @@
         text-align: center;
     }
     .NoteforLogIn span{
+        display: block;
+        font-size: 15px;
+        margin-top: 10vh;
+        cursor: pointer;
+    }
+
+    .NoteforRegistrations {
+        right: 50%;
+        padding: 20px;
+        font-weight: 700;
+        font-size: 40px;
+        text-align: center;
+    }
+    .NoteforRegistrations span{
         display: block;
         font-size: 15px;
         margin-top: 10vh;

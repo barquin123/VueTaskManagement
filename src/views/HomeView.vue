@@ -1,9 +1,22 @@
 <script setup>
 import TaskList from '@/components/HomeComponents/TaskList.vue';
-const datas = [
-  {assignedBy: 'assignee 1', assignedTo: 'assigned 1', taskTitle: 'Task 1', taskPriority: 'High', taskDueDate: '2022-12-31', taskCreatedDate: '2022-12-01', taskLink: 'javascript:;'},
-  {assignedBy: 'assignee 2', assignedTo: 'assigned 2', taskTitle: 'Task 2', taskPriority: 'High', taskDueDate: '2022-12-31', taskCreatedDate: '2022-12-01', taskLink: 'javascript:;'},
-]
+import { ref, onMounted, watchEffect } from 'vue';
+import { useTaskStore } from '@/stores/taskStore';
+import { storeToRefs } from 'pinia';
+
+const taskStore = useTaskStore();
+const { tasks, Taskloading, error  } = storeToRefs(taskStore);
+// Fetch tasks when the component is mounted
+onMounted(async () => {
+  await taskStore.fetchTasks();
+  console.log(tasks.value)
+});
+
+// Watch tasks array and log when it changes
+// watchEffect(() => {
+//   console.log('Fetched tasks:', tasks.value); // Logs tasks whenever they change
+// });
+
 const userData = {
   name: 'John Doe',
   userStatus: 'member'
@@ -14,7 +27,15 @@ const userData = {
 <template>
     <div class="tastListContainer">
       <h1>Task List</h1>
-      <table>
+      <div v-if="Taskloading">
+        <p>Loading...</p>
+      </div>
+      
+      <div v-if="error">
+        <p>Error: {{ error }}</p>
+      </div>
+
+      <table v-if="!Taskloading && !error">
         <tbody>
           <tr>
             <th>Assigned By</th>
@@ -26,15 +47,15 @@ const userData = {
             <th>Task Created Date</th>
             <th v-if="userData.userStatus=='admin'">Edit Task</th>
           </tr>
-          <TaskList v-for="(data, index) in datas" 
+          <TaskList v-for="(task, index) in tasks" 
             :key="index"
-            :assignedBy="data.assignedBy"
-            :assignedTo="data.assignedTo"
-            :taskTitle="data.taskTitle"
-            :taskPriority="data.taskPriority"
-            :taskDueDate="data.taskDueDate"
-            :taskCreatedDate="data.taskCreatedDate"
-            :taskLink="data.taskLink"
+            :assignedBy="task.assignedBy.name"
+            :assignedTo="task.assignedTo.name"
+            :taskTitle="task.taskName"
+            :taskPriority="task.taskPriority"
+            :taskDueDate="task.taskDueDate"
+            :taskCreatedDate="task.createdAt"
+            :taskLink="task.taskLink"
             :userStatus="userData.userStatus"
           />
         </tbody>
