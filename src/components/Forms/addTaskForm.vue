@@ -16,6 +16,7 @@ const taskName = ref('');
 const taskDescription = ref('');
 const taskDueDate = ref('');
 const taskPriority = ref('');
+const taskAssignedTo = ref('');
 const taskStatus = ref('Pending');
 
     // Handle form submission
@@ -26,6 +27,7 @@ const submitForm = () => {
         taskDueDate: taskDueDate.value,
         taskPriority: taskPriority.value,
         taskStatus: taskStatus.value,
+        assignedTo: taskAssignedTo.value
     };
     console.log(taskData);
 };
