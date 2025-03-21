@@ -6,7 +6,7 @@ export const useTaskStore = defineStore("task", () => {
   const tasks = ref([]);
   const Taskloading = ref(false);
   const error = ref(null);
-
+  const taskAdded = ref(false);
     // get all tasks
   const fetchTasks = async () => {
     Taskloading.value = true;
@@ -29,6 +29,7 @@ export const useTaskStore = defineStore("task", () => {
     try {
             const response = await axios.post('http://localhost:5000/api/tasks', newTask)
             tasks.value.push(response.data);
+            taskAdded.value = true;
         }catch(err){
             error.value = 'error adding task';
             console.log(err);

@@ -39,3 +39,13 @@ const useAuthStore = defineStore("auth", () => {
         user.value = null;
     };
 });
+
+return {
+    user,
+    loading,
+    error,
+    loggedIn,
+    register,
+    login,
+    logout,
+}

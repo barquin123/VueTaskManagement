@@ -1,12 +1,36 @@
 <script setup>
+import { ref, watch } from 'vue';
+import { authStore } from '@/stores/authStore';
+
+const email = ref('');
+const password = ref('');
+
+const authStore = useAuthStore();
+
+const submitForm = async () => {
+    const loginData = {
+        email: email.value,
+        password: password.value
+    };
+    console.log(loginData);
+    
+    // await authStore.login(loginData);
+
+    // watch(() => authStore.user, (newValue) => {
+    //         if (newValue){
+    //             console.log('User logged in');
+    //         }
+    //     }
+    // )    
+};
 </script>
 
 <template>
-    <div class="loginForm">
+    <div class="loginForm" @submit.prevent="submitForm">
         <h1>Log In</h1>
         <form action="login">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
+            <label for="username">Email:</label>
+            <input type="text" id="Email" name="Email">
             <div class = "clearfix"></div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password">
