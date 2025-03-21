@@ -37,13 +37,13 @@ const submitForm = () => {
     <div class="addtask" @submit.prevent="submitForm">
         <form action="addTask">
             <label for="taskName">Task Name:</label>
-            <input type="text" id="taskName" v-model="taskName">
+            <input type="text" id="taskName" v-model="taskName" required>
             <div class="clearfix"></div>
             <label for="taskDescription">Task Description:</label>
-            <textarea type="text" id="taskDescription" v-model="taskDescription"></textarea>
+            <textarea type="text" id="taskDescription" v-model="taskDescription" required></textarea>
             <div class="clearfix"></div>
             <label for="taskDueDate">Task Due Date:</label>
-            <input type="date" id="taskDueDate" v-model="taskDueDate" name="taskDueDate" :min="todayDate">
+            <input type="date" id="taskDueDate" v-model="taskDueDate" name="taskDueDate" :min="todayDate" required>
             <div class="clearfix"></div>
             <label>Task Priority</label>
             <div class="taskPriorityContainer">
@@ -62,11 +62,11 @@ const submitForm = () => {
             </div>
             <div class="clearfix"></div>
             <label for="assignedTo">Assigned To:</label>
-            <select id="assignedTo" v-model="taskAssignedTo">
+            <select id="assignedTo" v-model="taskAssignedTo" required>
                 <option v-for="(member, index) in members" :key="index" :value="member._id">{{ member.name }}</option>
             </select>
             <label for="taskStatus">Task Status:</label>
-            <select  id="taskStatus" v-model="taskStatus">
+            <select  id="taskStatus" v-model="taskStatus" required>
                 <option value="Pending">Pending</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
