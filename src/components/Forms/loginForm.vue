@@ -1,11 +1,18 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { authStore } from '@/stores/authStore';
+import { useAuthStore } from '@/stores/authStore';
 
 const email = ref('');
 const password = ref('');
 
 const authStore = useAuthStore();
+
+watch(() => authStore.loggedIn, (loggedIn) => {
+            if (loggedIn){
+                console.log('User logged in');
+            }
+        }
+    ) 
 
 const submitForm = async () => {
     const loginData = {
@@ -14,26 +21,19 @@ const submitForm = async () => {
     };
     console.log(loginData);
     
-    // await authStore.login(loginData);
-
-    // watch(() => authStore.user, (newValue) => {
-    //         if (newValue){
-    //             console.log('User logged in');
-    //         }
-    //     }
-    // )    
+    await authStore.login(loginData);
 };
 </script>
 
 <template>
-    <div class="loginForm" @submit.prevent="submitForm">
+    <div class="loginForm">
         <h1>Log In</h1>
-        <form action="login">
+        <form action="login" @submit.prevent="submitForm">
             <label for="username">Email:</label>
-            <input type="text" id="Email" name="Email">
+            <input type="email" id="Email" v-model="email" name="Email">
             <div class = "clearfix"></div>
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password">
+            <input type="password" id="password" v-model="password" name="password">
             <div class = "clearfix"></div>
             <input class="submitBtn" type="submit" value="Submit">
         </form>

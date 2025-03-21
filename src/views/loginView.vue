@@ -65,6 +65,7 @@
         font-weight: 700;
         font-size: 40px;
         text-align: center;
+        z-index: -1;
     }
     .NoteforRegistrations span{
         display: block;
@@ -80,13 +81,13 @@
         max-width: 60vw;
         margin: auto;
         padding: 30px;
-        margin-top: 10vh;
         border-radius: 15px;
         position: relative;
     }
     .loginWrapper{
         width: 100%;
-        height: 100vh;
+        height:95vh;
+        align-content: center;
     }
     .loginWrapper .inner::before{
         background: #3e69bc;

@@ -14,7 +14,6 @@ const userData = {
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink v-if="userData.userStatus == 'admin'" to="/addtask">Create Task</RouterLink>
-        <RouterLink v-if="userData.userStatus == 'member'" to="/alltask">All Task</RouterLink>
       </nav>
     </div>
 </template>

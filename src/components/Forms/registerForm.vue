@@ -1,23 +1,70 @@
 <script setup>
+import { ref } from 'vue';
+import { useAuthStore } from '@/stores/authStore';
+import { useRouter } from 'vue-router';
+
+// Define form fields
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const accountType = ref('member'); // Default value is 'member'
+
+// Get the authStore instance
+const authStore = useAuthStore();
+const router = useRouter(); // To redirect after registration
+
+// Submit handler
+const submitForm = async () => {
+  const credentials = {
+    name: name.value,
+    email: email.value,
+    password: password.value,
+    accountType: accountType.value,
+  };
+  try {
+    await authStore.register(credentials);
+    if (authStore.user) {
+      // Redirect to login or homepage upon successful registration
+      router.push('/tasks');
+    }
+  } catch (error) {
+    console.log('Registration failed:', error);
+    errorMessage.value = 'Registration failed, please try again!'; 
+  }
+};
 </script>
 
 <template>
     <div class="registerForm">
-        <h1>Registration</h1>
-        <form action="register">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
-            <div class="clearfix"></div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password">
-            <div class="clearfix"></div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email">
-            <div class="clearfix"></div>
-            <input class="submitBtn" type="submit" value="Submit">
-        </form>
+      <h1>Registration</h1>
+      <form @submit.prevent="submitForm">
+        <label for="name">Name</label>
+        <input type="text" id="name" v-model="name" name="name" required />
+  
+        <div class="clearfix"></div>
+  
+        <label for="email">Email</label>
+        <input type="email" id="email" v-model="email" name="email" required />
+  
+        <div class="clearfix"></div>
+  
+        <label for="password">Password</label>
+        <input type="password" id="password" v-model="password" name="password" required />
+  
+        <div class="clearfix"></div>
+  
+        <label for="accountType">Account Type</label>
+        <select v-model="accountType" name="accountType" id="accountType">
+          <option value="member">Member</option>
+          <option value="admin">Admin</option>
+        </select>
+  
+        <div class="clearfix"></div>
+  
+        <input class="submitBtn" type="submit" value="Submit" />
+      </form>
     </div>
-</template>
+  </template>
 
 <style scoped>
 h1{
