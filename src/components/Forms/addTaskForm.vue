@@ -1,8 +1,7 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
-import { watch } from 'vue';
 
 const userStore = useUserStore();
 const members = ref([]);
@@ -32,16 +31,16 @@ const submitForm = () => {
     };
     console.log(taskData);
     //await userStore.addTask(taskData);
-    watch (() => taskStore.taskAdded, (taskAdded) => {
-        if (taskAdded){
-            taskName.value = '';
-            taskDescription.value = '';
-            taskDueDate.value = '';
-            taskPriority.value = '';
-            taskAssignedTo.value = '';
-            taskStatus.value = 'Pending';
-        }
-    })
+    // watch (() => taskStore.taskAdded, (taskAdded) => {
+    //     if (taskAdded){
+    //         taskName.value = '';
+    //         taskDescription.value = '';
+    //         taskDueDate.value = '';
+    //         taskPriority.value = '';
+    //         taskAssignedTo.value = '';
+    //         taskStatus.value = 'Pending';
+    //     }
+    // })
 };
 </script>
 
