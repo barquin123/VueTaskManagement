@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
+import router from '@/router';
 
 const email = ref('');
 const password = ref('');
@@ -19,9 +20,18 @@ const submitForm = async () => {
         email: email.value,
         password: password.value
     };
-    console.log(loginData);
     
-    await authStore.login(loginData);
+    try{
+        await authStore.login(loginData);
+        if(loginData){
+            router.push('/');
+            console.log(loginData);
+        }
+    }catch(error){
+        console.log('login failed:', error);
+        errorMessage.value = 'login failed, please try again!'; 
+    }
+    
 };
 </script>
 
@@ -32,9 +42,11 @@ const submitForm = async () => {
             <label for="username">Email:</label>
             <input type="email" id="Email" v-model="email" name="Email">
             <div class = "clearfix"></div>
+
             <label for="password">Password:</label>
             <input type="password" id="password" v-model="password" name="password">
             <div class = "clearfix"></div>
+
             <input class="submitBtn" type="submit" value="Submit">
         </form>
     </div>

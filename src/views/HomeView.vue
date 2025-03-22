@@ -1,17 +1,28 @@
 <script setup>
 import TaskList from '@/components/HomeComponents/TaskList.vue';
-import { ref, onMounted, watchEffect } from 'vue';
+import { ref, onMounted, watchEffect, watch } from 'vue';
 import { useTaskStore } from '@/stores/taskStore';
 import { storeToRefs } from 'pinia';
+import { useAuthStore } from '@/stores/authStore';
 
 const taskStore = useTaskStore();
+const authStore = useAuthStore();
 const { tasks, Taskloading, error  } = storeToRefs(taskStore);
+
+
 // Fetch tasks when the component is mounted
 onMounted(async () => {
   await taskStore.fetchTasks();
   console.log(tasks.value)
+  console.log(authStore.loggedIn)
 });
 
+watch(() => authStore.loggedIn, (loggedIn) => {
+    console.log('LoggedIn state changed:', loggedIn);  // Log here to verify the watcher is working
+    if (loggedIn) {
+        console.log('loggedIn');
+    }
+});
 // Watch tasks array and log when it changes
 // watchEffect(() => {
 //   console.log('Fetched tasks:', tasks.value); // Logs tasks whenever they change
