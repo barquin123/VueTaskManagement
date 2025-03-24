@@ -10,7 +10,7 @@ const authStore = useAuthStore();
 
 watch(() => authStore.loggedIn, (loggedIn) => {
             if (loggedIn){
-                console.log('User logged in');
+                router.push('/tasks');
             }
         }
     ) 
@@ -23,12 +23,10 @@ const submitForm = async () => {
     
     try{
         await authStore.login(loginData);
-        if(loginData){
-            router.push('/');
-            console.log(loginData);
+        if(authStore.loggedIn){
+            router.push('/tasks');
         }
     }catch(error){
-        console.log('login failed:', error);
         errorMessage.value = 'login failed, please try again!'; 
     }
     

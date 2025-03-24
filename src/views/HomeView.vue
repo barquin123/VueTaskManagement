@@ -11,10 +11,11 @@ const { tasks, Taskloading, error  } = storeToRefs(taskStore);
 
 
 // Fetch tasks when the component is mounted
-onMounted(async () => {
-  await taskStore.fetchTasks();
+onMounted( () => {
+  taskStore.fetchTasks();
   console.log(tasks.value)
   console.log(authStore.loggedIn)
+  console.log(authStore.user)
 });
 
 watch(() => authStore.loggedIn, (loggedIn) => {
