@@ -37,8 +37,8 @@ const submitForm = async () => {
     <div class="loginForm">
         <h1>Log In</h1>
         <form action="login" @submit.prevent="submitForm">
-            <label for="username">Email:</label>
-            <input type="email" id="Email" v-model="email" name="Email">
+            <label for="Email">Email:</label>
+            <input type="email" id="Email" v-model="email" name="Email" autocomplete = "off">
             <div class = "clearfix"></div>
 
             <label for="password">Password:</label>

@@ -4,9 +4,9 @@ import { useAuthStore } from '@/stores/authStore';
 import { useRouter } from 'vue-router';
 
 // Define form fields
-const name = ref('');
-const email = ref('');
-const password = ref('');
+const registername = ref('');
+const registeremail = ref('');
+const registerpassword = ref('');
 const accountType = ref('member'); // Default value is 'member'
 
 // Get the authStore instance
@@ -16,9 +16,9 @@ const router = useRouter(); // To redirect after registration
 // Submit handler
 const submitForm = async () => {
   const credentials = {
-    name: name.value,
-    email: email.value,
-    password: password.value,
+    name: registername.value,
+    email: registeremail.value,
+    password: registerpassword.value,
     accountType: accountType.value,
   };
   try {
@@ -38,18 +38,18 @@ const submitForm = async () => {
     <div class="registerForm">
       <h1>Registration</h1>
       <form @submit.prevent="submitForm">
-        <label for="name">Name</label>
-        <input type="text" id="name" v-model="name" name="name" required />
+        <label for="registername">Name</label>
+        <input type="text" id="registername" v-model="registername" name="registername" required />
   
         <div class="clearfix"></div>
   
-        <label for="email">Email</label>
-        <input type="email" id="email" v-model="email" name="email" required />
+        <label for="registeremail">Email</label>
+        <input type="email" id="registeremail" v-model="registeremail" name="registeremail" required />
   
         <div class="clearfix"></div>
   
         <label for="password">Password</label>
-        <input type="password" id="password" v-model="password" name="password" required />
+        <input type="password" id="registerpassword" v-model="registerpassword" name="registerpassword" required />
   
         <div class="clearfix"></div>
   

@@ -1,12 +1,16 @@
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import axios from "axios";
 import { ref } from "vue";
+import { useAuthStore } from "./authStore";
 
 export const useTaskStore = defineStore("task", () => {
   const tasks = ref([]);
   const Taskloading = ref(false);
   const error = ref(null);
   const taskAdded = ref(false);
+  const AuthStore = useAuthStore();
+  const { user } = AuthStore;
+  
     // get all tasks
   const fetchTasks = async () => {
     Taskloading.value = true;
@@ -27,15 +31,16 @@ export const useTaskStore = defineStore("task", () => {
     Taskloading.value = true;
     error.value = null;
     try {
-            const response = await axios.post('http://localhost:5000/api/tasks', newTask)
-            tasks.value.push(response.data);
-            taskAdded.value = true;
-        }catch(err){
-            error.value = 'error adding task';
-            console.log(err);
-        }finally{
-            Taskloading.value = false; 
-        }
+        const taskWithAsignee = {...newTask, assignedBy: user.id};
+        const response = await axios.post('http://localhost:5000/api/tasks', taskWithAsignee);
+        tasks.value.push(response.data);
+        taskAdded.value = true;
+    }catch(err){
+        error.value = 'error adding task';
+        console.log(err);
+    }finally{
+        Taskloading.value = false; 
+    }
   };
 
   const updateTask = async (id, updateTask) =>{
@@ -69,5 +74,5 @@ export const useTaskStore = defineStore("task", () => {
     }
   }
 
-  return { tasks, Taskloading, error, fetchTasks, addTask, updateTask, deleteTask };
+  return { tasks, Taskloading, error, fetchTasks, addTask, updateTask, deleteTask, taskAdded };
 });

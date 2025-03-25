@@ -8,14 +8,13 @@ import { useAuthStore } from '@/stores/authStore';
 const taskStore = useTaskStore();
 const authStore = useAuthStore();
 const { tasks, Taskloading, error  } = storeToRefs(taskStore);
+const { user } = authStore;
 
 
 // Fetch tasks when the component is mounted
 onMounted( () => {
   taskStore.fetchTasks();
-  console.log(tasks.value)
-  console.log(authStore.loggedIn)
-  console.log(authStore.user)
+  console.log(user);
 });
 
 watch(() => authStore.loggedIn, (loggedIn) => {

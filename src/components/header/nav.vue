@@ -3,20 +3,14 @@ import { RouterLink, RouterView } from 'vue-router'
 import logo from '@/components/header/logo.vue'
 import { watch } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
+import { onMounted } from 'vue';
 
 const AuthStore = useAuthStore();
+const { user } = AuthStore;
 
-// watch (() => AuthStore.loggedIn, (loggedIn) => {
-//   console.log('LoggedIn state changed:', loggedIn);  // Log here to verify the watcher is working
-//   if (loggedIn) {
-//     console.log('loggedIn');
-//   }
-// });
-
-const userData = {
-  name: 'John Doe',
-  userStatus: 'member'
-}
+//  watch (() => AuthStore.userData, (userData) => {
+//      console.log(userData);
+//  });
 </script>
 
 <template>
@@ -24,7 +18,7 @@ const userData = {
     <logo />
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink v-if="userData.userStatus == 'admin'" to="/addtask">Create Task</RouterLink>
+        <RouterLink v-if="user?.accountType == 'admin'" to="/addtask">Create Task</RouterLink>
         <RouterLink v-if="AuthStore.loggedIn" to="/login" @click.prevent = "AuthStore.logout">Log Out</RouterLink>
       </nav>
     </div>

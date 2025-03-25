@@ -2,9 +2,11 @@
 import { ref, onMounted, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
+import { useTaskStore } from '@/stores/taskStore';
 
 const userStore = useUserStore();
 const members = ref([]);
+const taskStore = useTaskStore();
 
 onMounted(async () => {
   await userStore.fetchMembers();
@@ -19,28 +21,27 @@ const taskPriority = ref('');
 const taskAssignedTo = ref('');
 const taskStatus = ref('Pending');
 
+watch (() => taskStore.taskAdded, (taskAdded) => {
+         if (taskAdded){
+             taskName.value = '';
+             taskDescription.value = '';
+             taskDueDate.value = '';
+             taskPriority.value = '';
+             taskAssignedTo.value = '';
+             taskStatus.value = 'Pending';
+         }
+     })
     // Handle form submission
-const submitForm = () => {
+const submitForm = async () => {
     const taskData = {
         taskName: taskName.value,
         taskDescription: taskDescription.value,
-        taskDueDate: taskDueDate.value,
-        taskPriority: taskPriority.value,
+        dueDate: taskDueDate.value,
+        priorityLevel: taskPriority.value,
         taskStatus: taskStatus.value,
         assignedTo: taskAssignedTo.value
     };
-    console.log(taskData);
-    //await userStore.addTask(taskData);
-    // watch (() => taskStore.taskAdded, (taskAdded) => {
-    //     if (taskAdded){
-    //         taskName.value = '';
-    //         taskDescription.value = '';
-    //         taskDueDate.value = '';
-    //         taskPriority.value = '';
-    //         taskAssignedTo.value = '';
-    //         taskStatus.value = 'Pending';
-    //     }
-    // })
+    await taskStore.addTask(taskData);
 };
 </script>
 

@@ -47,6 +47,16 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/createTaskView.vue'),
+      beforeEnter: (to, from, next ) => {
+        const AuthStore = useAuthStore();
+        const { user } = AuthStore;
+        if (user.accountType === 'admin') {
+          next();
+        } else {
+          // If not logged in, redirect to login page
+          next('/tasks');
+        }
+      }
     },
     {
       path: '/task/:id',
