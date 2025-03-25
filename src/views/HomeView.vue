@@ -14,14 +14,6 @@ const { user } = authStore;
 // Fetch tasks when the component is mounted
 onMounted( () => {
   taskStore.fetchTasks();
-  console.log(user);
-});
-
-watch(() => authStore.loggedIn, (loggedIn) => {
-    console.log('LoggedIn state changed:', loggedIn);  // Log here to verify the watcher is working
-    if (loggedIn) {
-        console.log('loggedIn');
-    }
 });
 // Watch tasks array and log when it changes
 // watchEffect(() => {
