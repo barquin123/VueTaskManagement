@@ -10,7 +10,6 @@ const authStore = useAuthStore();
 const { tasks, Taskloading, error  } = storeToRefs(taskStore);
 const { user } = authStore;
 
-
 // Fetch tasks when the component is mounted
 onMounted( () => {
   taskStore.fetchTasks();
@@ -55,8 +54,8 @@ const userData = {
             :assignedBy="task.assignedBy.name"
             :assignedTo="task.assignedTo.name"
             :taskTitle="task.taskName"
-            :taskPriority="task.taskPriority"
-            :taskDueDate="task.taskDueDate"
+            :taskPriority="task.priorityLevel"
+            :taskDueDate="task.dueDate"
             :taskCreatedDate="task.createdAt"
             :taskLink="task.taskLink"
             :userStatus="userData.userStatus"

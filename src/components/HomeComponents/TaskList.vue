@@ -11,6 +11,11 @@ defineProps({
     userStatus: String,
     taskDescriptionLink: String
 })
+
+const formatDate = (date) => {
+  const d = new Date(date);
+  return d.toLocaleDateString(); // YYYY-MM-DD format
+};
 </script>
 
 <template>
@@ -26,8 +31,8 @@ defineProps({
             </select>
         </td>
         <td>{{ taskPriority }}</td>
-        <td>{{ taskDueDate }}</td>
-        <td>{{ taskCreatedDate }}</td>
+        <td>{{ formatDate(taskDueDate) }}</td>
+        <td>{{ formatDate(taskCreatedDate) }}</td>
         <td v-if="userStatus=='admin'"><span class="icon">Edit</span></td>
     </tr>
 </template>
