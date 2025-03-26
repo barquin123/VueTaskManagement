@@ -1,44 +1,68 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { useUserStore } from '@/stores/userStore';
-import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router';
 import { useTaskStore } from '@/stores/taskStore';
+import { useUserStore } from '@/stores/userStore';
 
-defineProps({
-    assignedBy: String,
-    assignedTo: String,
-    taskTitle: String,
-    taskDescription: String,
-    taskPriority: String,
-    taskDueDate: String,
-    taskCreatedDate: String,
-    taskLink: String,
-    userStatus: String,
-    taskDescriptionLink: String,
-    taskId: String
-})
+const taskStore = useTaskStore();
+const userStore = useUserStore();
 
+const members = ref([]);
+const route = useRoute();
+const taskID = route.params.id;
 const taskName = ref('');
 const taskDescription = ref('');
 const taskPriority = ref('');
 const taskDueDate = ref('');
 const taskAssignedTo = ref('');
 const taskStatus = ref('Pending');
+const todayDate = ref(new Date().toISOString().split('T')[0]);
 
 
-onMounted(() => {
-  taskName.value = taskTitle;
-  taskDescription.value = taskDescription;
-  taskPriority.value = taskPriority;
-  taskDueDate.value = taskDueDate;
-  taskAssignedTo.value = assignedTo;
-  taskStatus.value = userStatus;
+onMounted( async () => {
+    await userStore.fetchMembers();
+    members.value = userStore.users;
+  try{
+    const task = await taskStore.fetchTaskById(taskID);
+    console.log(task);
+    taskName.value = task.taskName;
+    taskDescription.value = task.taskDescription;
+    taskPriority.value = task.priorityLevel;
+    taskDueDate.value = task.dueDate.split("T")[0];;
+    taskAssignedTo.value = task.assignedTo._id;
+    taskStatus.value = task.status;
+  }catch(error){
+    console.log(error);
+  }
 });
+
+watch(() => taskStore.taskUpdated, (taskUpdated) => {
+  if (taskUpdated) {
+    taskName.value = '';
+    taskDescription.value = '';
+    taskDueDate.value = '';
+    taskPriority.value = '';
+    taskAssignedTo.value = '';
+    taskStatus.value = 'Pending';
+  }
+});
+
+const submitForm = async () => {
+    const taskData = {
+        taskName: taskName.value,
+        taskDescription: taskDescription.value,
+        dueDate: taskDueDate.value,
+        priorityLevel: taskPriority.value,
+        taskStatus: taskStatus.value,
+        assignedTo: taskAssignedTo.value
+    };
+    await taskStore.updateTask(taskID, taskData);
+}
 
 </script>
 
 <template>
-    <div class="editTask">
+    <div class="editTask" @submit.prevent="submitForm">
         <form action="editTask">
             <label for="taskName">Task Name:</label>
             <input type="text" id="taskName" v-model="taskName" required>
@@ -91,6 +115,19 @@ onMounted(() => {
         color: #fff;
         border: 1px solid #555;
         outline: none;
+    }
+    .taskPriorityContainer{
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        height: auto;
+    }
+    .taskPriorityContainer label{
+        margin-left: 10px;
+    }
+    input[type="radio"]{
+        width: auto;
+        display: unset;
     }
     input[type="date"]{
         color-scheme: dark;

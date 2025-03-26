@@ -22,7 +22,7 @@ onMounted( () => {
 watch(() => taskStore.noTask, (noTask) => {
   console.log(noTask);
   if (!noTask){
-    noTask.value = false;
+    noTask = false;
   }
 });
 </script>

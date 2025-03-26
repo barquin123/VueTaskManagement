@@ -46,6 +46,20 @@ export const useTaskStore = defineStore("task", () => {
     }
   };
 
+  const fetchTaskById = async (id) => {
+    Taskloading.value = true;
+    error.value = null;
+    try {
+      const response = await axios.get(`http://localhost:5000/api/tasks/${id}`);
+      return response.data;
+    } catch (err) {
+      error.value = 'Error fetching task';
+      console.error(err);
+    } finally {
+      Taskloading.value = false;
+    }
+  };
+
   const updateTask = async (id, updateTask) =>{
     Taskloading.value = true;
     error.value = null;
@@ -77,5 +91,5 @@ export const useTaskStore = defineStore("task", () => {
     }
   }
 
-  return { tasks, Taskloading, error, fetchTasks, addTask, updateTask, deleteTask, taskAdded,noTask };
+  return { tasks, Taskloading, error, fetchTasks, addTask, updateTask, deleteTask, taskAdded, noTask, fetchTaskById };
 });
