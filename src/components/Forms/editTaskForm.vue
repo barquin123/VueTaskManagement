@@ -1,27 +1,76 @@
 <script setup>
+import { ref, onMounted, watch } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+import { storeToRefs } from 'pinia';
+import { useTaskStore } from '@/stores/taskStore';
+
+defineProps({
+    assignedBy: String,
+    assignedTo: String,
+    taskTitle: String,
+    taskDescription: String,
+    taskPriority: String,
+    taskDueDate: String,
+    taskCreatedDate: String,
+    taskLink: String,
+    userStatus: String,
+    taskDescriptionLink: String,
+    taskId: String
+})
+
+const taskName = ref('');
+const taskDescription = ref('');
+const taskPriority = ref('');
+const taskDueDate = ref('');
+const taskAssignedTo = ref('');
+const taskStatus = ref('Pending');
+
+
+onMounted(() => {
+  taskName.value = taskTitle;
+  taskDescription.value = taskDescription;
+  taskPriority.value = taskPriority;
+  taskDueDate.value = taskDueDate;
+  taskAssignedTo.value = assignedTo;
+  taskStatus.value = userStatus;
+});
 
 </script>
 
 <template>
-    <div class="addtask">
-        <form action="addTask">
+    <div class="editTask">
+        <form action="editTask">
             <label for="taskName">Task Name:</label>
-            <input type="text" id="taskName" name="taskName">
+            <input type="text" id="taskName" v-model="taskName" required>
             <div class="clearfix"></div>
             <label for="taskDescription">Task Description:</label>
-            <textarea type="text" id="taskDescription" name="taskDescription"></textarea>
+            <textarea type="text" id="taskDescription" v-model="taskDescription" required></textarea>
             <div class="clearfix"></div>
             <label for="taskDueDate">Task Due Date:</label>
-            <input type="date" id="taskDueDate" name="taskDueDate">
+            <input type="date" id="taskDueDate" v-model="taskDueDate" name="taskDueDate" :min="todayDate" required>
             <div class="clearfix"></div>
-            <label for="taskPriority">Task Priority</label>
-            <div>
-                <input type="radio" id="taskPriority" name="taskPriority" value="Low">
-                <input type="radio" id="taskPriority" name="taskPriority" value="Medium">
-                <input type="radio" id="taskPriority" name="taskPriority" value="High">
+            <label>Task Priority</label>
+            <div class="taskPriorityContainer">
+                <div>
+                    <input type="radio" id="Low" v-model="taskPriority" value="Low">
+                    <label for="Low">Low</label>
+                </div>
+                <div>
+                    <input type="radio" id="Medium" v-model="taskPriority" value="Medium">
+                    <label for="Medium">Medium</label>
+                </div>
+                <div>
+                    <input type="radio" id="High" v-model="taskPriority" value="High">
+                    <label for="High">High</label>
+                </div>
             </div>
+            <div class="clearfix"></div>
+            <label for="assignedTo">Assigned To:</label>
+            <select id="assignedTo" v-model="taskAssignedTo" required>
+                <option v-for="(member, index) in members" :key="index" :value="member._id">{{ member.name }}</option>
+            </select>
             <label for="taskStatus">Task Status:</label>
-            <select  id="taskStatus" name="taskStatus">
+            <select  id="taskStatus" v-model="taskStatus" required>
                 <option value="Pending">Pending</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>

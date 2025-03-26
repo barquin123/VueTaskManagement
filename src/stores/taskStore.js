@@ -1,6 +1,6 @@
 import { defineStore, storeToRefs } from "pinia";
 import axios from "axios";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useAuthStore } from "./authStore";
 
 export const useTaskStore = defineStore("task", () => {
@@ -10,6 +10,8 @@ export const useTaskStore = defineStore("task", () => {
   const taskAdded = ref(false);
   const AuthStore = useAuthStore();
   const { user } = AuthStore;
+
+  const noTask = computed(() => tasks.value.length === 0);
   
     // get all tasks
   const fetchTasks = async () => {
@@ -75,5 +77,5 @@ export const useTaskStore = defineStore("task", () => {
     }
   }
 
-  return { tasks, Taskloading, error, fetchTasks, addTask, updateTask, deleteTask, taskAdded };
+  return { tasks, Taskloading, error, fetchTasks, addTask, updateTask, deleteTask, taskAdded,noTask };
 });

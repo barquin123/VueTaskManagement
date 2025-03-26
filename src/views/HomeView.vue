@@ -7,7 +7,7 @@ import { useAuthStore } from '@/stores/authStore';
 
 const taskStore = useTaskStore();
 const authStore = useAuthStore();
-const { tasks, Taskloading, error  } = storeToRefs(taskStore);
+const { tasks, Taskloading, error,noTask  } = storeToRefs(taskStore);
 const { user } = authStore;
 
 // Fetch tasks when the component is mounted
@@ -19,6 +19,12 @@ onMounted( () => {
 //   console.log('Fetched tasks:', tasks.value); // Logs tasks whenever they change
 // });
 
+watch(() => taskStore.noTask, (noTask) => {
+  console.log(noTask);
+  if (!noTask){
+    noTask.value = false;
+  }
+});
 </script>
 
 
@@ -59,6 +65,9 @@ onMounted( () => {
           />
         </tbody>
       </table>
+      <div v-if ="noTask">
+        <p>No tasks</p>
+      </div>
     </div>
 </template>
 
