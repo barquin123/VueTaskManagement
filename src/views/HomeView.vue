@@ -19,10 +19,6 @@ onMounted( () => {
 //   console.log('Fetched tasks:', tasks.value); // Logs tasks whenever they change
 // });
 
-const userData = {
-  name: 'John Doe',
-  userStatus: 'member'
-}
 </script>
 
 
@@ -47,7 +43,7 @@ const userData = {
             <th>Task Priority</th>
             <th>Task Due Date</th>
             <th>Task Created Date</th>
-            <th v-if="userData.userStatus=='admin'">Edit Task</th>
+            <th v-if="user.accountType=='admin'"></th>
           </tr>
           <TaskList v-for="(task, index) in tasks" 
             :key="index"
@@ -58,7 +54,8 @@ const userData = {
             :taskDueDate="task.dueDate"
             :taskCreatedDate="task.createdAt"
             :taskLink="task.taskLink"
-            :userStatus="userData.userStatus"
+            :userStatus="user.accountType"
+            :taskId = 'task._id'
           />
         </tbody>
       </table>
@@ -74,8 +71,5 @@ th, td {
         border: 1px solid #fff;
         width: 100%;
         min-width: 700px;
-    }
-    .icon{
-        cursor: pointer;
     }
 </style>

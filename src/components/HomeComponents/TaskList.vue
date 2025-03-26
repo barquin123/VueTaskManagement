@@ -1,4 +1,13 @@
 <script setup>
+import { useAuthStore } from '@/stores/authStore';
+import { ref, onMounted, watchEffect, watch } from 'vue';
+import { useTaskStore } from '@/stores/taskStore';
+
+const authStore = useAuthStore();
+const taskStore = useTaskStore();
+
+const { user } = authStore;
+
 defineProps({
     assignedBy: String,
     assignedTo: String,
@@ -9,7 +18,8 @@ defineProps({
     taskCreatedDate: String,
     taskLink: String,
     userStatus: String,
-    taskDescriptionLink: String
+    taskDescriptionLink: String,
+    taskId: String
 })
 
 const formatDate = (date) => {
@@ -33,7 +43,10 @@ const formatDate = (date) => {
         <td>{{ taskPriority }}</td>
         <td>{{ formatDate(taskDueDate) }}</td>
         <td>{{ formatDate(taskCreatedDate) }}</td>
-        <td v-if="userStatus=='admin'"><span class="icon">Edit</span></td>
+        <td v-if="user.accountType=='admin'" class="adminButtons">
+            <span class="adminButton edit">Edit</span>
+            <span class="adminButton delete" @click.prevent = "taskStore.deleteTask(taskId)">Delete</span>
+        </td>
     </tr>
 </template>
 
@@ -46,9 +59,6 @@ const formatDate = (date) => {
         border: 1px solid #fff;
         width: 100%;
         min-width: 700px;
-    }
-    .icon{
-        cursor: pointer;
     }
     a{
         text-decoration: none;
@@ -66,4 +76,20 @@ const formatDate = (date) => {
         background: #000;
         color: #fff;
     }
+    .adminButtons{
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+    .adminButton{
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+    .adminButton.edit{
+        background: #1faef0f6;
+    }
+    .adminButton.delete{
+        background: #f53939f6;
+    }
+    
 </style>

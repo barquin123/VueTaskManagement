@@ -18,6 +18,7 @@ export const useTaskStore = defineStore("task", () => {
     try {
         const response = await axios.get('http://localhost:5000/api/tasks')
         tasks.value = response.data;
+        tasks.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }catch(err){
         error.value = 'error fetching data';
         console.log(err);
@@ -65,7 +66,7 @@ export const useTaskStore = defineStore("task", () => {
     error.value = null;
     try{
         await axios.delete(`http://localhost:5000/api/tasks/${id}`)
-        tasks.value = tasks.value.filter(task => task.id !== id);
+        tasks.value = tasks.value.filter(task => task._id !== id);
     }catch(err){
         error.value = 'error deleting task';
         console.log(err);
