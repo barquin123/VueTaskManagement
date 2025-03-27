@@ -53,7 +53,7 @@ const submitForm = async () => {
         taskDescription: taskDescription.value,
         dueDate: taskDueDate.value,
         priorityLevel: taskPriority.value,
-        taskStatus: taskStatus.value,
+        status: taskStatus.value,
         assignedTo: taskAssignedTo.value
     };
     await taskStore.updateTask(taskID, taskData);

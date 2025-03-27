@@ -77,7 +77,14 @@ h1{
 form{
     width: 100%;
 }
-input{
+select:focus{
+  outline: none; 
+}
+select option{
+    background: #000;
+    color: #fff;
+}
+input, select{
         display: block;
         width: 100%;
         padding: 10px;

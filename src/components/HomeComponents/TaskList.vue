@@ -44,7 +44,7 @@ const formatDate = (date) => {
         <td>{{ formatDate(taskDueDate) }}</td>
         <td>{{ formatDate(taskCreatedDate) }}</td>
         <td v-if="user.accountType=='admin'" class="adminButtons">
-            <span class="adminButton edit">Edit</span>
+            <a class="adminButton edit" :href="'/task/edit/' + taskId">Edit</a>
             <span class="adminButton delete" @click.prevent = "taskStore.deleteTask(taskId)">Delete</span>
         </td>
     </tr>
