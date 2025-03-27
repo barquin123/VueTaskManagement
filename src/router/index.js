@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import { useAuthStore } from '@/stores/authStore';
+import NotFound from '@/views/NotFound.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,7 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/loginView.vue'),
+      
     },
     {
       path: '/addtask',
@@ -73,6 +75,11 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/editTaskView.vue'),
+    },
+    {
+      path: '/:pathMatch(.*)*',  // Matches any path that doesn't exist in the routes
+      name: 'NotFound',
+      component: NotFound,  // The 404 page component
     },
   ],
 })

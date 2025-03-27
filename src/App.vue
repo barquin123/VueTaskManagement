@@ -9,7 +9,7 @@ const userData = {
   userStatus: 'member'
 }
 
-const hideHeader = ['/login'];
+const hideHeader = ['/login', '/login/'];
 </script>
 
 <template>
