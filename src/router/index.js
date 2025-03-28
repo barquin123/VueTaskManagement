@@ -16,7 +16,6 @@ const router = createRouter({
       component: HomeView,
       beforeEnter: (to, from, next ) => {
         const AuthStore = useAuthStore();
-        console.log(AuthStore.loggedIn);
         if (AuthStore.loggedIn) {
           next();
         } else {
@@ -40,6 +39,15 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/loginView.vue'),
+      beforeEnter: (to, from, next ) => {
+        const AuthStore = useAuthStore();
+        if (AuthStore.loggedIn) {
+          next('/tasks');
+        } else {
+          // If not logged in, redirect to login page
+          next();
+        }
+      }
       
     },
     {

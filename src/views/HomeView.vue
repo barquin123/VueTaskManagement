@@ -13,11 +13,8 @@ const { user } = authStore;
 // Fetch tasks when the component is mounted
 onMounted( () => {
   taskStore.fetchTasks();
+  authStore.fetchCurrentUserData(user._id);
 });
-// Watch tasks array and log when it changes
-// watchEffect(() => {
-//   console.log('Fetched tasks:', tasks.value); // Logs tasks whenever they change
-// });
 
 watch(() => taskStore.noTask, (noTask) => {
   console.log(noTask);

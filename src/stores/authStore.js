@@ -8,6 +8,14 @@ export const useAuthStore = defineStore("auth", () => {
   const error = ref(null);
   const loggedIn = ref(false); // Updated to be false by default
 
+  if (localStorage.getItem('authUserData')) {
+    user.value = JSON.parse(localStorage.getItem('authUserData'));
+    loggedIn.value = JSON.parse(localStorage.getItem('loggedIn'));
+  }
+  const isLoggedIn = () => {
+    return loggedIn.value;
+  };
+
   const register = async (credentials) => {
     loading.value = true;
     error.value = null;
@@ -27,8 +35,10 @@ export const useAuthStore = defineStore("auth", () => {
     error.value = null;
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
-      user.value = response.data;
-      loggedIn.value = true;
+      localStorage.setItem('authUserData', JSON.stringify(response.data));
+      user.value = JSON.parse(localStorage.getItem('authUserData'));
+      localStorage.setItem('loggedIn', JSON.stringify(true));
+      loggedIn.value = JSON.parse(localStorage.getItem('loggedIn'));
     } catch (err) {
       error.value = 'Error logging in';
       console.log(err);
@@ -38,9 +48,28 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const fetchCurrentUserData = async (id) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const response = await axios.get(`http://localhost:5000/api/users/${id}`);
+      localStorage.setItem('authUserData', JSON.stringify(response.data));
+      user.value = JSON.parse(localStorage.getItem('authUserData'));
+      localStorage.setItem('loggedIn', JSON.stringify(true));
+      loggedIn.value = JSON.parse(localStorage.getItem('loggedIn'));
+    } catch (err) {
+      error.value = 'Error fetching data';
+      console.log(err);
+    } finally {
+      loading.value = false;
+    }
+  }
+
   const logout = () => {
     user.value = null;
     loggedIn.value = false;
+    localStorage.removeItem('authUserData');
+    localStorage.removeItem('loggedIn');
   };
 
   return {
@@ -51,5 +80,6 @@ export const useAuthStore = defineStore("auth", () => {
     register,
     login,
     logout,
+    fetchCurrentUserData,
   };
 });

@@ -34,7 +34,7 @@ export const useTaskStore = defineStore("task", () => {
     Taskloading.value = true;
     error.value = null;
     try {
-        const taskWithAsignee = {...newTask, assignedBy: user.id};
+        const taskWithAsignee = {...newTask, assignedBy: user._id};
         const response = await axios.post('http://localhost:5000/api/tasks', taskWithAsignee);
         tasks.value.push(response.data);
         taskAdded.value = true;
