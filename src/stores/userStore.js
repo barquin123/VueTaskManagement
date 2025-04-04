@@ -25,7 +25,7 @@ export const useUserStore = defineStore("user", () => {
         userLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.get(`http://localhost:5000/api/users//${id}`)
+            const response = await axios.get(`http://localhost:5000/api/users/${id}`)
             users.value = response.data;
         } catch (err) {
             error.value = 'error fetching data';

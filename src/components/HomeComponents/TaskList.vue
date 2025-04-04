@@ -32,7 +32,7 @@ const formatDate = (date) => {
     <tr>
         <td>{{ assignedBy }}</td>
         <td>{{ assignedTo }}</td>
-        <td><a :href="taskLink">{{ taskTitle }}</a></td>
+        <td><a :href="'/description/' + taskId" class="taskLink">{{ taskTitle }}</a></td>
         <td>
             <select>
                 <option value="Pending">Pending</option>
@@ -90,6 +90,11 @@ const formatDate = (date) => {
     }
     .adminButton.delete{
         background: #f53939f6;
+    }
+    .taskLink{
+        width: 100%;
+        height: 100%;
+        display: block;
     }
     
 </style>
