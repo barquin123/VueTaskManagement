@@ -13,7 +13,7 @@ const router = createRouter({
     {
       path: '/tasks',
       name: 'tasks',
-      component: HomeView,
+      component: () => import('../views/HomeView.vue'),
       beforeEnter: (to, from, next ) => {
         const AuthStore = useAuthStore();
         if (AuthStore.loggedIn) {

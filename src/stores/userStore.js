@@ -21,6 +21,20 @@ export const useUserStore = defineStore("user", () => {
         }
     };
 
+    const fetchSingleUser = async (id) => {
+        userLoading.value = true;
+        error.value = null;
+        try {
+            const response = await axios.get(`http://localhost:5000/api/users//${id}`)
+            users.value = response.data;
+        } catch (err) {
+            error.value = 'error fetching data';
+            console.log(err);
+        } finally {
+            userLoading.value = false;
+        }
+    };
+
     const fetchMembers = async () => {
         userLoading.value = true;
         error.value = null;
@@ -80,5 +94,5 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    return { users, userLoading, error, fetchUsers, addUser, updateUser, deleteUser, fetchMembers }
+    return { users, userLoading, error, fetchUsers, addUser, updateUser, deleteUser, fetchMembers, fetchSingleUser }
 });

@@ -4,17 +4,23 @@ import { ref, onMounted, watchEffect, watch } from 'vue';
 import { useTaskStore } from '@/stores/taskStore';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores/authStore';
+import { useUserStore } from '@/stores/userStore';
 
 const taskStore = useTaskStore();
 const authStore = useAuthStore();
+const userStore = useUserStore();
 const { tasks, Taskloading, error,noTask  } = storeToRefs(taskStore);
 const { user } = authStore;
 
 // Fetch tasks when the component is mounted
-onMounted( () => {
+onMounted( async () => {
   taskStore.fetchTasks();
-  authStore.fetchCurrentUserData(user._id);
+  console.log(user)
 });
+
+// const singleUser = (id) => {
+//   userStore.fetchSingleUser(id);
+// }
 
 watch(() => taskStore.noTask, (noTask) => {
   console.log(noTask);
@@ -48,7 +54,19 @@ watch(() => taskStore.noTask, (noTask) => {
             <th>Task Created Date</th>
             <th v-if="user.accountType=='admin'"></th>
           </tr>
-          <TaskList v-for="(task, index) in tasks" 
+          <TaskList v-if = "user.accountType == 'admin'" v-for="(task, index) in tasks" 
+            :key="index"
+            :assignedBy="task.assignedBy.name"
+            :assignedTo="task.assignedTo.name"
+            :taskTitle="task.taskName"
+            :taskPriority="task.priorityLevel"
+            :taskDueDate="task.dueDate"
+            :taskCreatedDate="task.createdAt"
+            :taskLink="task.taskLink"
+            :userStatus="user.accountType"
+            :taskId = 'task._id'
+          />
+          <TaskList v-if = "user.accountType == 'member'" v-for="(task, index) in user.taskList" 
             :key="index"
             :assignedBy="task.assignedBy.name"
             :assignedTo="task.assignedTo.name"
