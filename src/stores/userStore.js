@@ -11,7 +11,7 @@ export const useUserStore = defineStore("user", () => {
         userLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.get('http://localhost:5000/api/users')
+            const response = await axios.get('https://projectapis-o9v7.onrender.com/api/users')
             users.value = response.data;
         } catch (err) {
             error.value = 'error fetching data';
@@ -25,7 +25,7 @@ export const useUserStore = defineStore("user", () => {
         userLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.get(`http://localhost:5000/api/users/${id}`)
+            const response = await axios.get(`https://projectapis-o9v7.onrender.com/api/users/${id}`)
             users.value = response.data;
         } catch (err) {
             error.value = 'error fetching data';
@@ -39,7 +39,7 @@ export const useUserStore = defineStore("user", () => {
         userLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.get('http://localhost:5000/api/users/members')
+            const response = await axios.get('https://projectapis-o9v7.onrender.com/api/users/members')
             users.value = response.data;
         } catch (err) {
             error.value = 'error fetching data';
@@ -53,7 +53,7 @@ export const useUserStore = defineStore("user", () => {
         userLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.post('http://localhost:5000/api/users', newUser)
+            const response = await axios.post('https://projectapis-o9v7.onrender.com/api/users', newUser)
             users.value.push(response.data);
         } catch (err) {
             error.value = 'error adding user';
@@ -67,7 +67,7 @@ export const useUserStore = defineStore("user", () => {
         userLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.put(`http://localhost:5000/api/users/${id}`, updateUser)
+            const response = await axios.put(`https://projectapis-o9v7.onrender.com/api/users/${id}`, updateUser)
             const index = users.value.findIndex(user => user.id === id);
             if (index !== -1) {
                 this.users[index] = response.data;
@@ -84,7 +84,7 @@ export const useUserStore = defineStore("user", () => {
         userLoading.value = true;
         error.value = null;
         try {
-            await axios.delete(`http://localhost:5000/api/users/${id}`)
+            await axios.delete(`https://projectapis-o9v7.onrender.com/api/users/${id}`)
             users.value = users.value.filter(user => user.id !== id);
         } catch (err) {
             error.value = 'error deleting user';

@@ -18,7 +18,7 @@ export const useTaskStore = defineStore("task", () => {
     Taskloading.value = true;
     error.value = null;
     try {
-        const response = await axios.get('http://localhost:5000/api/tasks')
+        const response = await axios.get('https://projectapis-o9v7.onrender.com/api/tasks')
         tasks.value = response.data;
         tasks.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }catch(err){
@@ -35,7 +35,7 @@ export const useTaskStore = defineStore("task", () => {
     error.value = null;
     try {
         const taskWithAsignee = {...newTask, assignedBy: user._id};
-        const response = await axios.post('http://localhost:5000/api/tasks', taskWithAsignee);
+        const response = await axios.post('https://projectapis-o9v7.onrender.com/api/tasks', taskWithAsignee);
         tasks.value.push(response.data);
         taskAdded.value = true;
     }catch(err){
@@ -50,7 +50,7 @@ export const useTaskStore = defineStore("task", () => {
     Taskloading.value = true;
     error.value = null;
     try {
-      const response = await axios.get(`http://localhost:5000/api/tasks/${id}`);
+      const response = await axios.get(`https://projectapis-o9v7.onrender.com/api/tasks/${id}`);
       return response.data;
     } catch (err) {
       error.value = 'Error fetching task';
@@ -64,7 +64,7 @@ export const useTaskStore = defineStore("task", () => {
     Taskloading.value = true;
     error.value = null;
     try{
-        const response = await axios.put(`http://localhost:5000/api/tasks/${id}`, updateTask)
+        const response = await axios.put(`https://projectapis-o9v7.onrender.com/api/tasks/${id}`, updateTask)
         const index = tasks.value.findIndex(task => task._id === id);
         if (index !== -1){
             tasks.value[index] = response.data;
@@ -81,7 +81,7 @@ export const useTaskStore = defineStore("task", () => {
     Taskloading.value = true;
     error.value = null;
     try{
-        await axios.delete(`http://localhost:5000/api/tasks/${id}`)
+        await axios.delete(`https://projectapis-o9v7.onrender.com/api/tasks/${id}`)
         tasks.value = tasks.value.filter(task => task._id !== id);
     }catch(err){
         error.value = 'error deleting task';
