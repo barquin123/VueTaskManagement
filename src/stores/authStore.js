@@ -25,6 +25,7 @@ export const useAuthStore = defineStore("auth", () => {
     } catch (err) {
       error.value = 'Error registering';
       console.log(err);
+      throw err;
     } finally {
       loading.value = false;
     }
@@ -41,8 +42,8 @@ export const useAuthStore = defineStore("auth", () => {
       loggedIn.value = JSON.parse(localStorage.getItem('loggedIn'));
     } catch (err) {
       error.value = 'Error logging in';
-      console.log(err);
       loggedIn.value = false;
+      throw err;
     } finally {
       loading.value = false;
     }

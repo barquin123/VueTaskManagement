@@ -7,11 +7,23 @@ import { useRouter } from 'vue-router';
 const registername = ref('');
 const registeremail = ref('');
 const registerpassword = ref('');
+const emailErrorMessage = ref('');
+const passwordErrorMessage = ref('');
+const success = ref(false)
 const accountType = ref('member'); // Default value is 'member'
 
 // Get the authStore instance
 const authStore = useAuthStore();
 const router = useRouter(); // To redirect after registration
+
+const validateEmail = (email) => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+};
+const validatePassword = (password) => {
+  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+  return re.test(password);
+};
 
 // Submit handler
 const submitForm = async () => {
@@ -21,15 +33,22 @@ const submitForm = async () => {
     password: registerpassword.value,
     accountType: accountType.value,
   };
-  try {
-    await authStore.register(credentials);
-    if (authStore.user) {
-      // Redirect to login or homepage upon successful registration
-      router.push('/tasks');
+
+  if(!validateEmail(credentials.email)){
+    emailErrorMessage.value = 'Invalid email format!';
+    return;
+  } else if (!validatePassword(credentials.password)){
+    passwordErrorMessage.value = 'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number.';
+    return;
+  } else {
+    try {
+      await authStore.register(credentials);
+      if (authStore.user) {
+        success.value = true;
+      }
+    } catch (error) {
+      console.log('error')
     }
-  } catch (error) {
-    console.log('Registration failed:', error);
-    errorMessage.value = 'Registration failed, please try again!'; 
   }
 };
 </script>
@@ -37,19 +56,21 @@ const submitForm = async () => {
 <template>
     <div class="registerForm">
       <h1>Registration</h1>
-      <form @submit.prevent="submitForm">
+      <form @submit.prevent="submitForm" v-if="!success">
         <label for="registername">Name</label>
         <input type="text" id="registername" v-model="registername" name="registername" required />
   
         <div class="clearfix"></div>
   
         <label for="registeremail">Email</label>
-        <input type="email" id="registeremail" v-model="registeremail" name="registeremail" required />
+        <input :class="{error: emailErrorMessage !== ''}" type="text" id="registeremail" v-model="registeremail" name="registeremail" required />
+        <p class="errorText" v-if="emailErrorMessage !== ''">{{emailErrorMessage}}</p>
   
         <div class="clearfix"></div>
   
         <label for="password">Password</label>
-        <input type="password" id="registerpassword" v-model="registerpassword" name="registerpassword" required />
+        <input :class="{error: passwordErrorMessage !== ''}" type="password" id="registerpassword" v-model="registerpassword" name="registerpassword" required />
+        <p class="errorText" v-if="passwordErrorMessage !== ''">{{passwordErrorMessage}}</p>
   
         <div class="clearfix"></div>
   
@@ -63,6 +84,7 @@ const submitForm = async () => {
   
         <input class="submitBtn" type="submit" value="Submit" />
       </form>
+      <p v-if="success" class="successText">Registration successful! You can now log in.</p>
     </div>
   </template>
 
@@ -100,4 +122,17 @@ input, select{
         border: none;
         background: #47af3e;
     }
+    input.error{
+    border: 1px solid rgb(233, 61, 61);
+}  
+.errorText{
+    color: rgb(233, 61, 61);
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+.successText {
+  text-align: center;
+}
 </style>

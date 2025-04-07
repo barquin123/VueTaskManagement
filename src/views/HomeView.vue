@@ -10,7 +10,7 @@ const taskStore = useTaskStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const { tasks, Taskloading, error,noTask  } = storeToRefs(taskStore);
-const { user } = authStore;
+const { user, taskList } = authStore;
 
 // Fetch tasks when the component is mounted
 onMounted( async () => {
@@ -26,6 +26,10 @@ watch(() => taskStore.noTask, (noTask) => {
   console.log(noTask);
   if (!noTask){
     noTask = false;
+  }
+
+  if (!user.taskList){
+      noTask = false;
   }
 });
 </script>
@@ -81,6 +85,9 @@ watch(() => taskStore.noTask, (noTask) => {
         </tbody>
       </table>
       <div v-if ="noTask">
+        <p>No tasks</p>
+      </div>
+      <div v-if ="user.taskList.length == 0 && user.accountType == 'member'">
         <p>No tasks</p>
       </div>
     </div>
