@@ -65,9 +65,9 @@ export const useTaskStore = defineStore("task", () => {
     error.value = null;
     try{
         const response = await axios.put(`http://localhost:5000/api/tasks/${id}`, updateTask)
-        const index = tasks.value.findIndex(task => task.id === id);
+        const index = tasks.value.findIndex(task => task._id === id);
         if (index !== -1){
-            this.tasks[index] = response.data;
+            tasks.value[index] = response.data;
         }
     }catch(err){
         error.value = 'error updating task';

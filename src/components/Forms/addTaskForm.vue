@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
 import { useTaskStore } from '@/stores/taskStore';
+import router from '@/router';
 
 const userStore = useUserStore();
 const members = ref([]);
@@ -31,6 +32,8 @@ watch (() => taskStore.taskAdded, (taskAdded) => {
              taskStatus.value = 'Pending';
          }
      })
+     
+
     // Handle form submission
 const submitForm = async () => {
     const taskData = {
@@ -41,7 +44,12 @@ const submitForm = async () => {
         status: taskStatus.value,
         assignedTo: taskAssignedTo.value
     };
-    await taskStore.addTask(taskData);
+    try{
+        await taskStore.addTask(taskData);
+        router.push('/tasks');
+    }catch(error){
+        console.error('Error adding task:', error);
+    }
 };
 </script>
 
@@ -60,7 +68,7 @@ const submitForm = async () => {
             <label>Task Priority</label>
             <div class="taskPriorityContainer">
                 <div>
-                    <input type="radio" id="Low" v-model="taskPriority" value="Low">
+                    <input type="radio" id="Low" v-model="taskPriority" value="Low" checked="checked">
                     <label for="Low">Low</label>
                 </div>
                 <div>

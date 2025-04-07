@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTaskStore } from '@/stores/taskStore';
 import { useUserStore } from '@/stores/userStore';
+import router from '@/router';
 
 const taskStore = useTaskStore();
 const userStore = useUserStore();
@@ -16,7 +17,9 @@ const taskPriority = ref('');
 const taskDueDate = ref('');
 const taskAssignedTo = ref('');
 const taskStatus = ref('Pending');
+const updatedByUser = ref('');
 const todayDate = ref(new Date().toISOString().split('T')[0]);
+const loading = ref(false);
 
 
 onMounted( async () => {
@@ -31,19 +34,11 @@ onMounted( async () => {
     taskDueDate.value = task.dueDate.split("T")[0];;
     taskAssignedTo.value = task.assignedTo._id;
     taskStatus.value = task.status;
+    if (task.updatedBy) {
+            updatedByUser.value = task.updatedBy.name;  
+        }
   }catch(error){
     console.log(error);
-  }
-});
-
-watch(() => taskStore.taskUpdated, (taskUpdated) => {
-  if (taskUpdated) {
-    taskName.value = '';
-    taskDescription.value = '';
-    taskDueDate.value = '';
-    taskPriority.value = '';
-    taskAssignedTo.value = '';
-    taskStatus.value = 'Pending';
   }
 });
 
@@ -56,12 +51,20 @@ const submitForm = async () => {
         status: taskStatus.value,
         assignedTo: taskAssignedTo.value
     };
-    await taskStore.updateTask(taskID, taskData);
-}
+    // console.log("Submitting task data:", taskData);
+    try{
+        loading.value = true;
+        await taskStore.updateTask(taskID, taskData);
+        router.push('/description/'+taskID);
+    }catch(error){
+        console.error('Error updating task:', error);
+    }
+};
 
 </script>
 
 <template>
+    <div class="loading" v-if="loading">loading....</div>
     <div class="editTask" @submit.prevent="submitForm">
         <form action="editTask">
             <label for="taskName">Task Name:</label>
@@ -102,6 +105,10 @@ const submitForm = async () => {
             <div class="clearfix"></div>
             <input type="submit" value="Submit">
         </form>
+        <div v-if="updatedByUser">
+            <label>Last Updated By:</label>
+            <p>{{ updatedByUser }}</p> <!-- Display the name of the user who last updated the task -->
+        </div>
     </div>
 </template>
 
