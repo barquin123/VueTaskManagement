@@ -31,6 +31,15 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../components/taskDescription.vue'),
+      beforeEnter: (to, from, next ) => {
+        const AuthStore = useAuthStore();
+        if (AuthStore.loggedIn) {
+          next();
+        } else {
+          // If not logged in, redirect to login page
+          next('/login');
+        }
+      }
     },
     {
       path: '/login',
@@ -75,6 +84,15 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/singleTaskView.vue'),
+      beforeEnter: (to, from, next ) => {
+        const AuthStore = useAuthStore();
+        if (AuthStore.loggedIn) {
+          next();
+        } else {
+          // If not logged in, redirect to login page
+          next('/login');
+        }
+      }
     },
     {
       path: '/task/edit/:id',
@@ -83,6 +101,33 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/editTaskView.vue'),
+      beforeEnter: (to, from, next ) => {
+        const AuthStore = useAuthStore();
+        const { user } = AuthStore;
+        if (user.accountType === 'admin') {
+          next();
+        } else {
+          // If not logged in, redirect to login page
+          next('/tasks');
+        }
+      }
+    },
+    {
+      path: '/profile/:id',
+      name: 'Profile',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/profileView.vue'),
+      beforeEnter: (to, from, next ) => {
+        const AuthStore = useAuthStore();
+        if (AuthStore.loggedIn) {
+          next();
+        } else {
+          // If not logged in, redirect to login page
+          next('/login');
+        }
+      }
     },
     {
       path: '/:pathMatch(.*)*',  // Matches any path that doesn't exist in the routes

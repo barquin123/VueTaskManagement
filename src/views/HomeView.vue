@@ -16,6 +16,7 @@ const { user, taskList } = authStore;
 onMounted( async () => {
   taskStore.fetchTasks();
   console.log(user)
+  console.log(tasks.value);
 });
 
 // const singleUser = (id) => {
@@ -69,6 +70,8 @@ watch(() => taskStore.noTask, (noTask) => {
             :taskLink="task.taskLink"
             :userStatus="user.accountType"
             :taskId = 'task._id'
+            :assignedById = 'task.assignedBy._id'
+            :assassignedToId ='task.assignedTo._id'
           />
           <TaskList v-if = "user.accountType == 'member'" v-for="(task, index) in user.taskList" 
             :key="index"
@@ -81,6 +84,8 @@ watch(() => taskStore.noTask, (noTask) => {
             :taskLink="task.taskLink"
             :userStatus="user.accountType"
             :taskId = 'task._id'
+            :assignedById = 'task.assignedBy._id'
+            :assassignedToId ='task.assignedTo._id'
           />
         </tbody>
       </table>

@@ -19,7 +19,9 @@ defineProps({
     taskLink: String,
     userStatus: String,
     taskDescriptionLink: String,
-    taskId: String
+    taskId: String,
+    assassignedToId: String,
+    assignedById: String
 })
 
 const formatDate = (date) => {
@@ -30,8 +32,8 @@ const formatDate = (date) => {
 
 <template>
     <tr>
-        <td>{{ assignedBy }}</td>
-        <td>{{ assignedTo }}</td>
+        <td><a :href="'/profile/'+assignedById">{{ assignedBy }}</a></td>
+        <td><a :href="'/profile/'+assassignedToId">{{ assignedTo }}</a></td>
         <td><a :href="'/description/' + taskId" class="taskLink">{{ taskTitle }}</a></td>
         <td>
             <select>
@@ -96,5 +98,7 @@ const formatDate = (date) => {
         height: 100%;
         display: block;
     }
-    
+    a:hover{
+        text-decoration: underline;
+    }
 </style>

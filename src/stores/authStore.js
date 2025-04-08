@@ -6,6 +6,7 @@ export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const loading = ref(false);
   const error = ref(null);
+  const errorMessage = ref(null); // Added to store error message
   const loggedIn = ref(false); // Updated to be false by default
 
   if (localStorage.getItem('authUserData')) {
@@ -21,8 +22,12 @@ export const useAuthStore = defineStore("auth", () => {
     error.value = null;
     try {
       const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/register', credentials);
+      // const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/register', credentials);
       user.value = response.data;
     } catch (err) {
+      if (error.response && error.response.status === 400){
+        errorMessage.value = error.response.data.message;
+      }
       error.value = 'Error registering';
       console.log(err);
       throw err;
@@ -36,6 +41,7 @@ export const useAuthStore = defineStore("auth", () => {
     error.value = null;
     try {
       const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/login', credentials);
+      // const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/login', credentials);
       localStorage.setItem('authUserData', JSON.stringify(response.data));
       user.value = JSON.parse(localStorage.getItem('authUserData'));
       localStorage.setItem('loggedIn', JSON.stringify(true));
@@ -63,5 +69,6 @@ export const useAuthStore = defineStore("auth", () => {
     register,
     login,
     logout,
+    errorMessage,
   };
 });

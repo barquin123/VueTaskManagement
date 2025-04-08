@@ -13,6 +13,7 @@ export const useUserStore = defineStore("user", () => {
         try {
             const response = await axios.get('https://projectapis-o9v7.onrender.com/api/users')
             users.value = response.data;
+            return response.data;
         } catch (err) {
             error.value = 'error fetching data';
             console.log(err);
@@ -26,7 +27,7 @@ export const useUserStore = defineStore("user", () => {
         error.value = null;
         try {
             const response = await axios.get(`https://projectapis-o9v7.onrender.com/api/users/${id}`)
-            users.value = response.data;
+            return response.data;
         } catch (err) {
             error.value = 'error fetching data';
             console.log(err);
@@ -41,6 +42,7 @@ export const useUserStore = defineStore("user", () => {
         try {
             const response = await axios.get('https://projectapis-o9v7.onrender.com/api/users/members')
             users.value = response.data;
+            return response.data;
         } catch (err) {
             error.value = 'error fetching data';
             console.log(err);
