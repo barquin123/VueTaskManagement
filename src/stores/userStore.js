@@ -20,7 +20,7 @@ export const useUserStore = defineStore("user", () => {
         } finally {
             userLoading.value = false;
         }
-    };
+    }; 
 
     const fetchSingleUser = async (id) => {
         userLoading.value = true;

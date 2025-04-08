@@ -48,10 +48,16 @@ const formatDate = (date) => {
                 <h2>Team</h2>
                 <div class='teamContainer'>
                     <div class="teamMates"v-if="accountType == 'member' && members.length > 0" v-for = "(member, index) in members" :key="'member-'+index">
-                        <p><a :href="'/profile/'+member._id">{{ member.name }}</a></p>
+                        <a :href="'/profile/'+member._id">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrsaTeFqurvUDvMYOcgZAd-JPf-dtLogrrog&s" alt="" width="50px" height="50px">
+                            <p>{{ member.name }}</p>
+                        </a>
                     </div>
                     <div class="teamMates" v-else-if="accountType == 'admin' && allUsers.length > 0" v-for = "(user, index) in allUsers" :key="'admin-'+index">
-                        <p><a :href="'/profile/'+user._id">{{ user.name }}</a></p> 
+                        <a :href="'/profile/'+user._id">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrsaTeFqurvUDvMYOcgZAd-JPf-dtLogrrog&s" alt="" width="50px" height="50px">
+                            <p>{{ user.name }}</p>
+                        </a> 
                     </div>
                 </div>
             </div>
@@ -125,6 +131,9 @@ a{
 a:hover{
     text-decoration: underline;
 }
+.teamMates img{
+    border-radius: 50%;
+}
 .team h2{
     text-align: center;
     margin-bottom: 10px;
@@ -137,7 +146,7 @@ a:hover{
   text-align: center;
 }
 .teamContainer .teamMates{
-    width: 33%;
+    width: 25%;
     padding: 10px 15px;
     margin: 5px 0;
 }

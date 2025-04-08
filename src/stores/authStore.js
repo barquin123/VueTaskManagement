@@ -24,12 +24,11 @@ export const useAuthStore = defineStore("auth", () => {
       const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/register', credentials);
       // const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/register', credentials);
       user.value = response.data;
-    } catch (err) {
+    } catch (error) {
       if (error.response && error.response.status === 400){
-        errorMessage.value = error.response.data.message;
+        errorMessage.value = error.response.data.error;
       }
       error.value = 'Error registering';
-      console.log(err);
       throw err;
     } finally {
       loading.value = false;

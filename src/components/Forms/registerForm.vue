@@ -9,6 +9,7 @@ const registeremail = ref('');
 const registerpassword = ref('');
 const emailErrorMessage = ref('');
 const passwordErrorMessage = ref('');
+const existingUserErrorMessage = ref('');
 const success = ref(false)
 const accountType = ref('member'); // Default value is 'member'
 
@@ -41,13 +42,15 @@ const submitForm = async () => {
     passwordErrorMessage.value = 'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number.';
     return;
   } else {
+    passwordErrorMessage.value = "";
+    emailErrorMessage.value = "";
     try {
       await authStore.register(credentials);
       if (authStore.user) {
         success.value = true;
       }
     } catch (error) {
-      console.log('error')
+      existingUserErrorMessage.value = authStore.errorMessage;
     }
   }
 };
@@ -63,8 +66,9 @@ const submitForm = async () => {
         <div class="clearfix"></div>
   
         <label for="registeremail">Email</label>
-        <input :class="{error: emailErrorMessage !== ''}" type="text" id="registeremail" v-model="registeremail" name="registeremail" required />
+        <input :class="{ error: emailErrorMessage !== '' || existingUserErrorMessage !== '' }" type="text" id="registeremail" v-model="registeremail" name="registeremail" required />
         <p class="errorText" v-if="emailErrorMessage !== ''">{{emailErrorMessage}}</p>
+        <p class="errorText" v-if="existingUserErrorMessage !== ''">{{ existingUserErrorMessage }}</p>
   
         <div class="clearfix"></div>
   
