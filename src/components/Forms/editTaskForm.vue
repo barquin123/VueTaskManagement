@@ -31,7 +31,7 @@ onMounted( async () => {
     taskName.value = task.taskName;
     taskDescription.value = task.taskDescription;
     taskPriority.value = task.priorityLevel;
-    taskDueDate.value = task.dueDate.split("T")[0];;
+    taskDueDate.value = task.dueDate.split("T")[0];
     taskAssignedTo.value = task.assignedTo._id;
     taskStatus.value = task.status;
     if (task.updatedBy) {
@@ -46,7 +46,7 @@ const submitForm = async () => {
     const taskData = {
         taskName: taskName.value,
         taskDescription: taskDescription.value,
-        dueDate: taskDueDate.value,
+        dueDate: new Date(taskDueDate.value).toISOString(),
         priorityLevel: taskPriority.value,
         status: taskStatus.value,
         assignedTo: taskAssignedTo.value
@@ -68,13 +68,13 @@ const submitForm = async () => {
     <div class="editTask" @submit.prevent="submitForm">
         <form action="editTask">
             <label for="taskName">Task Name:</label>
-            <input type="text" id="taskName" v-model="taskName" required>
+            <input type="text" id="taskName" v-model="taskName">
             <div class="clearfix"></div>
             <label for="taskDescription">Task Description:</label>
-            <textarea type="text" id="taskDescription" v-model="taskDescription" required></textarea>
+            <textarea type="text" id="taskDescription" v-model="taskDescription"></textarea>
             <div class="clearfix"></div>
             <label for="taskDueDate">Task Due Date:</label>
-            <input type="date" id="taskDueDate" v-model="taskDueDate" name="taskDueDate" :min="todayDate" required>
+            <input type="date" id="taskDueDate" v-model="taskDueDate" name="taskDueDate" :min="todayDate">
             <div class="clearfix"></div>
             <label>Task Priority</label>
             <div class="taskPriorityContainer">
@@ -93,11 +93,11 @@ const submitForm = async () => {
             </div>
             <div class="clearfix"></div>
             <label for="assignedTo">Assigned To:</label>
-            <select id="assignedTo" v-model="taskAssignedTo" required>
+            <select id="assignedTo" v-model="taskAssignedTo">
                 <option v-for="(member, index) in members" :key="index" :value="member._id">{{ member.name }}</option>
             </select>
             <label for="taskStatus">Task Status:</label>
-            <select  id="taskStatus" v-model="taskStatus" required>
+            <select  id="taskStatus" v-model="taskStatus">
                 <option value="Pending">Pending</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
