@@ -130,6 +130,40 @@ const router = createRouter({
       }
     },
     {
+      path: '/chat/:id',
+      name: 'chat',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/chat.vue'),
+      // beforeEnter: (to, from, next ) => {
+      //   const AuthStore = useAuthStore();
+      //   if (AuthStore.loggedIn) {
+      //     next();
+      //   } else {
+      //     // If not logged in, redirect to login page
+      //     next('/login');
+      //   }
+      // }
+    },
+    {
+      path: '/chat',
+      name: 'messages',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/messages.vue'),
+      // beforeEnter: (to, from, next ) => {
+      //   const AuthStore = useAuthStore();
+      //   if (AuthStore.loggedIn) {
+      //     next();
+      //   } else {
+      //     // If not logged in, redirect to login page
+      //     next('/login');
+      //   }
+      // }
+    },
+    {
       path: '/:pathMatch(.*)*',  // Matches any path that doesn't exist in the routes
       name: 'NotFound',
       component: NotFound,  // The 404 page component

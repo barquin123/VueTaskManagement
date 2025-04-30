@@ -21,8 +21,8 @@ export const useAuthStore = defineStore("auth", () => {
     loading.value = true;
     error.value = null;
     try {
-      const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/register', credentials);
-      // const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/register', credentials);
+      const response = await axios.post('http://localhost:5000/api/auth/register', credentials);
+      // const response = await axios.post('http://localhost:5000/api/auth/register', credentials);
       user.value = response.data;
     } catch (error) {
       if (error.response && error.response.status === 400){
@@ -39,8 +39,8 @@ export const useAuthStore = defineStore("auth", () => {
     loading.value = true;
     error.value = null;
     try {
-      const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/login', credentials);
-      // const response = await axios.post('https://projectapis-o9v7.onrender.com/api/auth/login', credentials);
+      const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
+      // const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
       localStorage.setItem('authUserData', JSON.stringify(response.data));
       user.value = JSON.parse(localStorage.getItem('authUserData'));
       localStorage.setItem('loggedIn', JSON.stringify(true));
