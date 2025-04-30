@@ -29,8 +29,9 @@ export const useChatStore = defineStore("chat", () => {
         chatLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.post('http://localhost:5000/api/messages', newMessage)
+            const response = await axios.post('http://localhost:5000/api/send', newMessage)
             conversation.value.push(response.data);
+            console.log(response.data)
             chatAdded.value = true;
         } catch (err) {
             error.value = 'error adding message';
@@ -45,6 +46,7 @@ export const useChatStore = defineStore("chat", () => {
         chatLoading,
         error,
         chatAdded,
-        fetchConversations
+        fetchConversations,
+        sendMessage
     };
 })
