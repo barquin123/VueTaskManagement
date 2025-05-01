@@ -25,6 +25,22 @@ export const useChatStore = defineStore("chat", () => {
         }
     };
 
+    const startConversation = async (userId, recipientId) => {
+        try {
+            const response = await axios.post(`/api/start-conversation`, { userId, recipientId });
+            const newConversation = response.data.conversation;
+    
+            // Optionally add it to the conversation list in the store
+            if (!conversation.value.some(c => c._id === newConversation._id)) {
+                conversation.value.push(newConversation);
+            }
+    
+            return newConversation; // Return for navigation or use
+        } catch (err) {
+            console.error('Error starting conversation:', err);
+        }
+    };
+
     const sendMessage = async (newMessage) => {
         chatLoading.value = true;
         error.value = null;
@@ -47,6 +63,7 @@ export const useChatStore = defineStore("chat", () => {
         error,
         chatAdded,
         fetchConversations,
-        sendMessage
+        sendMessage,
+        startConversation
     };
 })
