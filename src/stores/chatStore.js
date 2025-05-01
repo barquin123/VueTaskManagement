@@ -34,6 +34,8 @@ export const useChatStore = defineStore("chat", () => {
             if (!conversation.value.some(c => c._id === newConversation._id)) {
                 conversation.value.push(newConversation);
             }
+
+            console.log('New conversation started:', newConversation);
     
             return newConversation; // Return for navigation or use
         } catch (err) {
