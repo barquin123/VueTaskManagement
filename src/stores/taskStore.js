@@ -21,7 +21,7 @@ export const useTaskStore = defineStore("task", () => {
     Taskloading.value = true;
     error.value = null;
     try {
-        const response = await axios.get('http://localhost:5000')
+        const response = await axios.get('http://localhost:5000/api/tasks')
         // const response = await axios.get('https://projectapis-o9v7.onrender.com/api/tasks')
         tasks.value = response.data;
         tasks.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

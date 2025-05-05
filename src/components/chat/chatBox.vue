@@ -1,7 +1,7 @@
 <script setup>
 defineProps({
-    youMsg: String,
-    otherMsg: String,
+    youMsg: Array,
+    otherMsg: Array,
     youName: String,
     otherName: String,
     youimg: String,

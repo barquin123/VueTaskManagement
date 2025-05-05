@@ -13,10 +13,10 @@ export const useChatStore = defineStore("chat", () => {
         chatLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.get(`http://localhost:5000/api/conversations/${id}`)
+            const response = await axios.get(`http://localhost:5000/api/convo/conversations/${id}`)
             conversation.value = response.data;
-            console.log(response.data)
-            // return response.data;
+            console.log('fetchedData',response.data)
+            return response.data;
         } catch (err) {
             error.value = 'error fetching data';
             console.log(err);
@@ -27,7 +27,7 @@ export const useChatStore = defineStore("chat", () => {
 
     const startConversation = async (userId, recipientId) => {
         try {
-            const response = await axios.post(`/api/start-conversation`, { userId, recipientId });
+            const response = await axios.post(`http://localhost:5000/api/convo/start-conversation`, { userId, recipientId });
             const newConversation = response.data.conversation;
     
             // Optionally add it to the conversation list in the store
@@ -35,19 +35,34 @@ export const useChatStore = defineStore("chat", () => {
                 conversation.value.push(newConversation);
             }
 
-            console.log('New conversation started:', newConversation);
+            // console.log('New conversation started:', newConversation);
     
-            return newConversation; // Return for navigation or use
+            return newConversation._id; // Return for navigation or use
         } catch (err) {
             console.error('Error starting conversation:', err);
         }
     };
 
+    const fetchUserConversations = async (userId) => {
+        chatLoading.value = true;
+        error.value = null;
+        try {
+            const response = await axios.get(`http://localhost:5000/api/convo/${userId}`)
+            conversation.value = response.data;
+            console.log(response.data)
+        } catch (err) {
+            error.value = 'error fetching data';
+            console.log(err);
+        } finally {
+            chatLoading.value = false;
+        }
+    }
+
     const sendMessage = async (newMessage) => {
         chatLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.post('http://localhost:5000/api/send', newMessage)
+            const response = await axios.post('http://localhost:5000/api/convo/send', newMessage)
             conversation.value.push(response.data);
             console.log(response.data)
             chatAdded.value = true;
@@ -60,12 +75,12 @@ export const useChatStore = defineStore("chat", () => {
     }
 
     return {
-        chats,
         chatLoading,
         error,
         chatAdded,
         fetchConversations,
         sendMessage,
-        startConversation
+        startConversation,
+        fetchUserConversations
     };
 })
