@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { ref } from "vue";
+import { io } from "socket.io-client";
 
 export const useChatStore = defineStore("chat", () => {
     const conversation = ref([]);
     const chatLoading = ref(false);
     const error = ref(null);
     const chatAdded = ref(false);
-
+    const socket = ref(io('http://localhost:5000'))
 
     const fetchConversations = async (id) => {
         chatLoading.value = true;
@@ -15,7 +16,7 @@ export const useChatStore = defineStore("chat", () => {
         try {
             const response = await axios.get(`http://localhost:5000/api/convo/conversations/${id}`)
             conversation.value = response.data;
-            console.log('fetchedData',response.data)
+            socket.value.emit('joinRoom', id);
             return response.data;
         } catch (err) {
             error.value = 'error fetching data';
@@ -63,8 +64,12 @@ export const useChatStore = defineStore("chat", () => {
         error.value = null;
         try {
             const response = await axios.post('http://localhost:5000/api/convo/send', newMessage)
-            conversation.value.push(response.data);
-            console.log(response.data)
+            if (conversation.value && conversation.value._id === newMessage.conversationId) {
+                if (!conversation.value.messages) {
+                    conversation.value.messages = [];
+                }
+                conversation.value.messages.push(response.data);
+            }
             chatAdded.value = true;
         } catch (err) {
             error.value = 'error adding message';
@@ -74,6 +79,16 @@ export const useChatStore = defineStore("chat", () => {
         }
     }
 
+    socket.value.on('newMessage', (message) => {
+        // Find the conversation in the store
+        if (conversation.value && conversation.value._id === message.conversationId) {
+            // Push the message to the store's conversation messages
+            fetchConversations(conversation.value._id);
+            console.log('New message received:', message);
+        }
+    });
+
+
     return {
         chatLoading,
         error,
@@ -81,6 +96,7 @@ export const useChatStore = defineStore("chat", () => {
         fetchConversations,
         sendMessage,
         startConversation,
-        fetchUserConversations
+        fetchUserConversations,
+        conversation
     };
 })

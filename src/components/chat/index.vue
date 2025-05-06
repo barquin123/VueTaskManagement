@@ -1,117 +1,146 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useChatStore } from '@/stores/chatStore';
-import chatBox from '@/components/chat/chatBox.vue';
+import { useAuthStore } from '@/stores/authStore';
 import { useRoute } from 'vue-router';
+import chatBox from '@/components/chat/chatBox.vue';
 
 const route = useRoute();
 const convoID = route.params.id;
+const authStore = useAuthStore();
 const chatStore = useChatStore();
-const convo = ref(null); // Store the conversation in a reactive reference
-const yourMessages = ref([]);
-const otherMessages = ref([]);
+const convo = ref(null);
+const messages = ref([]);
 const sender = ref('');
 const receiver = ref('');
 const message = ref('');
+const currentUserId = authStore.user._id;
+
+const scrollToBottom = () => {
+  setTimeout(() => {
+    const chatBox = document.querySelector('.chatBox');
+    if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+  }, 100);
+};
 
 onMounted(async () => {
-    try {
-        const fetchedConvo = await chatStore.fetchConversations(convoID);
-        
-        if (fetchedConvo.members.length === 2) {
-            convo.value = fetchedConvo; // Store the fetched conversation in the ref
-            receiver.value = convo.value.members[1].name;
-            sender.value = convo.value.members[0].name;
-            yourMessages.value = convo.value.messages.filter(msg => msg.sender === convo.value.members[0]._id);
-            otherMessages.value = convo.value.messages.filter(msg => msg.sender === convo.value.members[1]._id);
-        } else {
-            console.error('Conversation members are not correctly populated');
-        }
-    } catch (err) {
-        console.error('Error fetching conversation:', err);
+  try {
+    const fetchedConvo = await chatStore.fetchConversations(convoID);
+    if (fetchedConvo.members.length === 2) {
+      convo.value = fetchedConvo;
+      const sortedMessages = [...convo.value.messages].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+      const senderMember = fetchedConvo.members.find(m => m._id === currentUserId);
+      const receiverMember = fetchedConvo.members.find(m => m._id !== currentUserId);
+
+      sender.value = senderMember.name;
+      receiver.value = receiverMember.name;
+      messages.value = sortedMessages.map(m => ({
+        text: m.text,
+        timestamp: m.timestamp,
+        sender: m.sender._id,
+        receiver: m.receiver._id,
+      }));
+
+      scrollToBottom();
     }
+  } catch (err) {
+    console.error('Error fetching conversation:', err);
+  }
 });
 
-const sendMessage = async () => {
-    if (!convo.value) {
-        console.error('Conversation not loaded yet');
-        return;
-    }
-    if (!message.value.trim()) {
-        return; // Do nothing if the message is empty or just spaces
-    }
+watch(
+    () => chatStore.conversation?.messages,
+    (newMessages) => {
+        if (newMessages) {
+            messages.value = newMessages.map((m) => ({
+                text: m.text,
+                timestamp: m.timestamp,
+                sender: m.sender._id,
+                receiver: m.receiver._id,
+            }));
+            scrollToBottom();
+        }
+    },
+    { deep: true }
+);
 
-    const messageData = {
-        conversationId: convoID,
-        senderId: convo.value.members[0]._id,
-        receiverId: convo.value.members[1]._id,
-        text: message.value,
-    };
-    console.log(messageData);
-    try {
-        await chatStore.sendMessage(messageData);
-        yourMessages.value.push({ message: message.value, sender: convo.value.members[0]._id }); // <--- useless when using socket.io
-        message.value = '';
-    } catch (error) {
-        console.error('Error sending message:', error);
-    }
+const sendMessage = async () => {
+  if (!convo.value || !message.value.trim()) return;
+
+  const senderMember = convo.value.members.find(m => m._id === currentUserId);
+  const receiverMember = convo.value.members.find(m => m._id !== currentUserId);
+
+  const messageData = {
+    conversationId: convoID,
+    senderId: senderMember._id,
+    receiverId: receiverMember._id,
+    text: message.value.trim(),
+  };
+
+  try {
+    await chatStore.sendMessage(messageData);
+    // yourMessages.value.push({ text: message.value.trim(), timestamp: new Date().toISOString() });
+    message.value = '';
+    scrollToBottom();
+  } catch (error) {
+    console.error('Error sending message:', error);
+  }
 };
 </script>
 
 <template>
-    <div class="othersName">
-        <div class="otherName">{{ receiver }}</div>
-        <!-- <div class="otherStatus">Online</div> -->
-    </div>
-    <chatBox 
-        :youMsg="yourMessages" 
-        :otherMsg="otherMessages" 
-        :youName="sender" 
-        :otherName="receiver"
-    />
-    <div class="chantInputs">
-        <form @submit.prevent="sendMessage">
-            <input 
-                type="text" 
-                placeholder="Type a message..." 
-                class="chatInput" 
-                v-model="message"
-            />
-            <button type="submit" class="sendBtn">Send</button>
-        </form>
-    </div>
+  <div class="othersName">
+    <div class="otherName">{{ receiver }}</div>
+  </div>
+  <chatBox 
+    :messages = "messages"
+    :youName="sender" 
+    :otherName="receiver" 
+  />
+  <div class="chantInputs">
+    <form @submit.prevent="sendMessage">
+      <input 
+        type="text" 
+        placeholder="Type a message..." 
+        class="chatInput" 
+        v-model="message"
+      />
+      <button type="submit" class="sendBtn">Send</button>
+    </form>
+  </div>
 </template>
 
 <style scoped>
-.othersName{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    background: #3e69bc;
+.othersName {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: #3e69bc;
 }
-.chantInputs{
-    position: relative;
+.chantInputs {
+  position: relative;
 }
-.chatContainer{
-    width: 100%;
+.chatContainer {
+  width: 100%;
 }
-.sendBtn{
-    position: absolute;
-    right: 0;
-    top: 0;
-    padding: 11px 20px;
-    background-color: #3e69bc;
-    color: white;
-    border: none;
-    cursor: pointer;
+.sendBtn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 11px 20px;
+  background-color: #3e69bc;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
-.chatInput{
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-    outline: none;
+.chatInput {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  outline: none;
 }
 </style>
