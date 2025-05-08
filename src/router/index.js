@@ -27,9 +27,6 @@ const router = createRouter({
     {
       path: '/description/:id',
       name: 'description',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../components/taskDescription.vue'),
       beforeEnter: (to, from, next ) => {
         const AuthStore = useAuthStore();
@@ -44,9 +41,6 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/loginView.vue'),
       beforeEnter: (to, from, next ) => {
         const AuthStore = useAuthStore();
@@ -62,9 +56,6 @@ const router = createRouter({
     {
       path: '/addtask',
       name: 'Create Task',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/createTaskView.vue'),
       beforeEnter: (to, from, next ) => {
         const AuthStore = useAuthStore();
@@ -80,9 +71,6 @@ const router = createRouter({
     {
       path: '/task/:id',
       name: 'Task',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/singleTaskView.vue'),
       beforeEnter: (to, from, next ) => {
         const AuthStore = useAuthStore();
@@ -97,9 +85,6 @@ const router = createRouter({
     {
       path: '/task/edit/:id',
       name: 'Edit Task',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/editTaskView.vue'),
       beforeEnter: (to, from, next ) => {
         const AuthStore = useAuthStore();
@@ -115,9 +100,6 @@ const router = createRouter({
     {
       path: '/profile/:id',
       name: 'Profile',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/profileView.vue'),
       beforeEnter: (to, from, next ) => {
         const AuthStore = useAuthStore();
@@ -132,36 +114,44 @@ const router = createRouter({
     {
       path: '/chat/:id',
       name: 'chat',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/chat.vue'),
-      // beforeEnter: (to, from, next ) => {
-      //   const AuthStore = useAuthStore();
-      //   if (AuthStore.loggedIn) {
-      //     next();
-      //   } else {
-      //     // If not logged in, redirect to login page
-      //     next('/login');
-      //   }
-      // }
+       beforeEnter: (to, from, next ) => {
+         const AuthStore = useAuthStore();
+         if (AuthStore.loggedIn) {
+           next();
+         } else {
+           // If not logged in, redirect to login page
+           next('/login');
+         }
+       }
+    },
+    {
+      path: '/messages',
+      name: 'Chat List',
+      component: () => import('../views/conversationView.vue'),
+       beforeEnter: (to, from, next ) => {
+         const AuthStore = useAuthStore();
+         if (AuthStore.loggedIn) {
+           next();
+         } else {
+           // If not logged in, redirect to login page
+           next('/login');
+         }
+       }
     },
     {
       path: '/chat',
       name: 'messages',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/messages.vue'),
-      // beforeEnter: (to, from, next ) => {
-      //   const AuthStore = useAuthStore();
-      //   if (AuthStore.loggedIn) {
-      //     next();
-      //   } else {
-      //     // If not logged in, redirect to login page
-      //     next('/login');
-      //   }
-      // }
+       beforeEnter: (to, from, next ) => {
+         const AuthStore = useAuthStore();
+         if (AuthStore.loggedIn) {
+           next();
+         } else {
+           // If not logged in, redirect to login page
+           next('/login');
+         }
+       }
     },
     {
       path: '/:pathMatch(.*)*',  // Matches any path that doesn't exist in the routes

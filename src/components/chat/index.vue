@@ -2,10 +2,12 @@
 import { ref, onMounted, watch } from 'vue';
 import { useChatStore } from '@/stores/chatStore';
 import { useAuthStore } from '@/stores/authStore';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import chatBox from '@/components/chat/chatBox.vue';
 
+
 const route = useRoute();
+const router = useRouter();
 const convoID = route.params.id;
 const authStore = useAuthStore();
 const chatStore = useChatStore();
@@ -87,11 +89,15 @@ const sendMessage = async () => {
     console.error('Error sending message:', error);
   }
 };
+
+const handleClick = () => {
+  router.push({ name: 'Chat List' });
+};
 </script>
 
 <template>
   <div class="othersName">
-    <div class="otherName">{{ receiver }}</div>
+    <div class="otherNameinner"> <span @click="handleClick()"> < </span> {{ receiver }}</div>
   </div>
   <chatBox 
     :messages = "messages"
@@ -118,9 +124,20 @@ const sendMessage = async () => {
   align-items: center;
   padding: 10px 15px;
   background: #3e69bc;
+  position: relative;
 }
 .chantInputs {
   position: relative;
+}
+.otherNameinner{
+  padding-left: 20px;
+}
+.otherNameinner span{
+  font-size: 20px;
+  font-weight: 700;
+  position: absolute;
+  top: 6px;
+  left: 15px;
 }
 .chatContainer {
   width: 100%;

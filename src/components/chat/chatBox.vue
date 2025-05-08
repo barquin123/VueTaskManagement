@@ -68,13 +68,14 @@ const { messages, youName, otherName, youimg, otherimg } = defineProps({
   color: gray;
   text-align: right;
 }
+.youMsg-row{
+  display: flex;
+}
 .otherMsg-row {
   display: flex;
   flex-direction: row-reverse;
 }
-.youMsg-row{
-  display: flex;
-}
+
 .youProfile, .otherProfile {
   margin: 0 10px;
   text-align: center;
