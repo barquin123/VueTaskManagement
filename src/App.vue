@@ -1,19 +1,19 @@
 <script setup>
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import navigationElem from '@/components/header/nav.vue'
+import { computed } from 'vue';
 
 const route = useRoute();
 
-const userData = {
-  name: 'John Doe',
-  userStatus: 'member'
-}
-
-const hideHeader = ['/login', '/login/'];
+const hideHeader = computed(() => {
+  return route.path === '/login' ||
+         route.path === '/login/' ||
+         route.path.startsWith('/chat')
+})
 </script>
 
 <template>
-  <header v-if = "!hideHeader.includes(route.path)">
+  <header v-if="!hideHeader">
     <navigationElem />
   </header>
 

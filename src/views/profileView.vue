@@ -2,18 +2,22 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
+import { useAuthStore } from '@/stores/authStore';
+import { useChatStore } from '@/stores/chatStore';
 
 const route = useRoute();
 const profileID = route.params.id;
 const userStore = useUserStore();
+const authStore = useAuthStore();
+const chatStore = useChatStore();
+const currentUser = authStore.user;
 const accountType = ref('');
 const name = ref('');
 const email = ref('');
 const tasks = ref([]);
 const CreatedAt = ref('');
 const members = ref([]);
-const allUsers = ref([]);
-
+const allUsers = ref([]); 
 onMounted( async () => {
     const profileUser = await userStore.fetchSingleUser(profileID);
     name.value = profileUser.name;
@@ -21,16 +25,25 @@ onMounted( async () => {
     tasks.value = profileUser.taskList;
     CreatedAt.value = formatDate(profileUser.createdAt);
     accountType.value = profileUser.accountType;
-    console.log(tasks);
     allUsers.value = await userStore.fetchUsers();
     members.value = await userStore.fetchMembers();
-    console.log('all', allUsers);
-    console.log('members',members);
 });
 
 const formatDate = (date) => {
   const d = new Date(date);
   return d.toLocaleDateString(); // YYYY-MM-DD format
+};
+
+const handleMessageClick = async () => {
+    // Logic to handle message click
+    const otherUser = profileID;
+    const currentUserId = currentUser._id;
+    const chatID = await chatStore.startConversation(currentUserId, otherUser);
+    if (chatID){
+        window.location.href = '/chat/' + chatID;
+    } else {
+        console.error('Failed to start chat');
+    }
 };
 
 </script>
@@ -42,6 +55,7 @@ const formatDate = (date) => {
             <p>{{ accountType }}</p>
             <a :href="'mailto:'+email"><p>{{ email }}</p></a>
             <p>{{ CreatedAt }}</p>
+            <button v-if="currentUser._id != profileID" class="startConvo" @click="handleMessageClick">Send A Message</button>
         </div>
         <div class="profileOthers">
             <div class="team">
@@ -81,6 +95,19 @@ const formatDate = (date) => {
     max-width: 200px;
     max-height: 200px;
     border-radius: 15px;
+}
+.startConvo{
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 .profileContainer {
   display: flex;

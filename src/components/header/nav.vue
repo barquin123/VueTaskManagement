@@ -19,6 +19,7 @@ const { user } = AuthStore;
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink v-if="user?.accountType == 'admin'" to="/addtask">Create Task</RouterLink>
+        <RouterLink to="/messages">Messages</RouterLink>
         <RouterLink v-if="AuthStore.loggedIn" to="/login" @click.prevent = "AuthStore.logout">Log Out</RouterLink>
       </nav>
     </div>
