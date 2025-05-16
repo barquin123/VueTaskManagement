@@ -8,13 +8,13 @@ export const useChatStore = defineStore("chat", () => {
     const chatLoading = ref(false);
     const error = ref(null);
     const chatAdded = ref(false);
-    const socket = ref(io('http://localhost:5000'))
+    const socket = ref(io('https://projectapis-o9v7.onrender.com'))
 
     const fetchConversations = async (id) => {
         chatLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.get(`http://localhost:5000/api/convo/conversations/${id}`)
+            const response = await axios.get(`https://projectapis-o9v7.onrender.com/api/convo/conversations/${id}`)
             conversation.value = response.data;
             socket.value.emit('joinRoom', id);
             return response.data;
@@ -28,7 +28,7 @@ export const useChatStore = defineStore("chat", () => {
 
     const startConversation = async (userId, recipientId) => {
         try {
-            const response = await axios.post(`http://localhost:5000/api/convo/start-conversation`, { userId, recipientId });
+            const response = await axios.post(`https://projectapis-o9v7.onrender.com/api/convo/start-conversation`, { userId, recipientId });
             const newConversation = response.data.conversation;
     
             // Optionally add it to the conversation list in the store
@@ -48,7 +48,7 @@ export const useChatStore = defineStore("chat", () => {
         chatLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.get(`http://localhost:5000/api/convo/${userId}`)
+            const response = await axios.get(`https://projectapis-o9v7.onrender.com/api/convo/${userId}`)
             conversation.value = response.data;
             // console.log(response.data)
             return response.data;
@@ -64,7 +64,7 @@ export const useChatStore = defineStore("chat", () => {
         chatLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.post('http://localhost:5000/api/convo/send', newMessage)
+            const response = await axios.post('https://projectapis-o9v7.onrender.com/api/convo/send', newMessage)
             if (conversation.value && conversation.value._id === newMessage.conversationId) {
                 if (!conversation.value.messages) {
                     conversation.value.messages = [];
