@@ -1,28 +1,28 @@
 # VueTaskManagementSystem
 
-This is a TaskManagement system project using the MEVN stack and sockets for realtime update.
+This is a TaskManagement system project using the MEVN stack and sockets for realtime update.  
 
 # Feature
-CRUD tasks
-has a working Chat system for team conversation
-a working login and registration forms
+CRUD tasks  
+has a working Chat system for team conversation  
+a working login and registration forms  
 
 # account you can use for testing
 ## admin account
-admin@gmail.com
-admin123
+admin@gmail.com  
+admin123  
 
 ### admin account
-admin account has the ability to add remove edit tasks
-can see all created task on their dashboard
+admin account has the ability to add remove edit tasks  
+can see all created task on their dashboard  
 
 ## member account
-member@gmail.com
-admin123
+member@gmail.com  
+admin123  
 
 ### member account
-does not have the capability to add remove edit tasks
-can only see the tasks assigned to them
+does not have the capability to add remove edit tasks  
+can only see the tasks assigned to them  
 
 ## Recommended IDE Setup
 
