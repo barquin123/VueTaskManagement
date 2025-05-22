@@ -46,5 +46,4 @@ npm run dev
 npm run build
 ```
 ### site
-```sh
 [https://taskmanagement-cream.netlify.app](https://taskmanagement-cream.netlify.app)
